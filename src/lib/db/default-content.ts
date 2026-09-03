@@ -42,35 +42,63 @@ const CATEGORY_SEEDS: {
   slug: string;
   description: string;
 }[] = [
-  {
-    id: 'cat-coffee',
-    name: 'Coffee',
-    slug: 'coffee',
-    description: 'Espresso, filtre et signatures lactées.',
-  },
-  {
-    id: 'cat-cold',
-    name: 'Cold Drinks',
-    slug: 'cold-drinks',
-    description: 'Boissons glacées, cold brew et frappés.',
-  },
+  // Sections réelles de la carte, communiquées par la maison, dans son ordre.
+  // Les descriptions sont volontairement génériques : elles expliquent ce que
+  // recouvre l'intitulé, sans rien affirmer sur des produits précis. À
+  // personnaliser depuis /admin/menu/categories.
   {
     id: 'cat-brunch',
     name: 'Brunch',
     slug: 'brunch',
-    description: 'Assiettes salées et formules du matin au début d’après-midi.',
+    description: 'Assiettes salées et sucrées, du matin au début d’après-midi.',
   },
   {
-    id: 'cat-sweet',
-    name: 'Sweet',
-    slug: 'sweet',
-    description: 'Pâtisseries, desserts et douceurs de la maison.',
+    id: 'cat-hot-coffee',
+    name: 'Hot Coffee',
+    slug: 'hot-coffee',
+    description: 'Espresso, filtre et boissons lactées, servis chauds.',
   },
   {
-    id: 'cat-juice',
-    name: 'Juices & Smoothies',
-    slug: 'juices-smoothies',
-    description: 'Jus pressés et smoothies préparés à la commande.',
+    id: 'cat-cold-coffee',
+    name: 'Cold Coffee',
+    slug: 'cold-coffee',
+    description: 'Cafés servis sur glace.',
+  },
+  {
+    id: 'cat-hot-tea',
+    name: 'Hot Tea',
+    slug: 'hot-tea',
+    description: 'Thés et infusions servis chauds.',
+  },
+  {
+    id: 'cat-iced-tea',
+    name: 'Iced Tea',
+    slug: 'iced-tea',
+    description: 'Thés glacés.',
+  },
+  {
+    id: 'cat-frappuccino',
+    name: 'Frappuccino',
+    slug: 'frappuccino',
+    description: 'Cafés frappés, texture glacée et onctueuse.',
+  },
+  {
+    id: 'cat-mocktails',
+    name: 'Mocktails',
+    slug: 'mocktails',
+    description: 'Cocktails sans alcool.',
+  },
+  {
+    id: 'cat-jus-naturels',
+    name: 'Jus Naturels',
+    slug: 'jus-naturels',
+    description: 'Jus de fruits frais.',
+  },
+  {
+    id: 'cat-refreshers',
+    name: 'Refreshers',
+    slug: 'refreshers',
+    description: 'Boissons fraîches et désaltérantes.',
   },
 ];
 
@@ -129,8 +157,11 @@ export const defaultContent: SiteContent = {
   },
 
   contact: {
-    phone: '',
-    whatsapp: '',
+    // Numéro officiel. `telHref` et `whatsappHref` le normalisent : le format
+    // local « 0553… » devient « +213553… » pour l'appel et « 213553… » pour
+    // wa.me, il n'y a donc rien à convertir à la main.
+    phone: '0553 00 74 14',
+    whatsapp: '0553 00 74 14',
     email: '',
     // Aucune adresse précise n'est inventée : à renseigner depuis /admin/contact.
     addressLine: '',
@@ -162,8 +193,8 @@ export const defaultContent: SiteContent = {
     title: 'Réservez votre table',
     description:
       'Indiquez la date, l’heure et le nombre de personnes : votre demande nous parvient immédiatement et nous confirmons par retour de message.',
-    whatsapp: '',
-    phone: '',
+    whatsapp: '0553 00 74 14',
+    phone: '0553 00 74 14',
     minGuests: 1,
     maxGuests: 12,
     openingTime: '08:00',
@@ -260,10 +291,11 @@ export const defaultContent: SiteContent = {
     enabled: true,
   })),
 
+  // Deux emplacements par catégorie : assez pour montrer la mise en page des
+  // cartes, assez peu pour ne pas noyer la page sous neuf sections d'exemples.
   items: CATEGORY_SEEDS.flatMap((c) => [
     placeholderItem(c.id, 1),
     placeholderItem(c.id, 2),
-    placeholderItem(c.id, 3),
   ]),
 
   // Photos et vidéos sont ajoutées depuis le dashboard : les sections
@@ -308,10 +340,12 @@ export const defaultContent: SiteContent = {
     {
       id: 'soc-whatsapp',
       platform: 'whatsapp',
+      // `socialHref` construit le lien wa.me à partir du numéro quand `url`
+      // est vide : inutile de dupliquer une URL ici.
       url: '',
-      handle: '',
+      handle: '0553 00 74 14',
       position: 4,
-      enabled: false,
+      enabled: true,
     },
   ],
 };

@@ -138,10 +138,38 @@ export function MenuSection({
       </div>
 
       <div className="container-x mt-10">
-        {activeCategory?.description && (
-          <p className="mb-7 max-w-xl font-serif text-base italic text-fg-muted">
-            {activeCategory.description}
-          </p>
+        {/* Bandeau de section : la photo de la catégorie, si elle a été
+            renseignée dans le dashboard, sinon le seul texte. `photo-wash`
+            aligne la photo sur la palette et garantit la lisibilité du texte
+            posé dessus, quelle que soit l'image téléversée. */}
+        {activeCategory?.imageUrl ? (
+          <div className="photo-wash photo-scrim relative mb-8 aspect-16/9 w-full overflow-hidden rounded-[2rem] border border-line sm:aspect-21/8">
+            <Image
+              key={activeCategory.id}
+              src={activeCategory.imageUrl}
+              alt={activeCategory.name}
+              fill
+              sizes="(max-width: 1280px) 100vw, 1200px"
+              loading="lazy"
+              className="object-cover"
+            />
+            <div className="absolute inset-x-0 bottom-0 z-10 p-5 sm:p-8">
+              <h3 className="font-display text-xl font-semibold text-cream sm:text-2xl">
+                {activeCategory.name}
+              </h3>
+              {activeCategory.description && (
+                <p className="mt-1 max-w-xl font-serif text-sm italic text-cream/85 sm:text-base">
+                  {activeCategory.description}
+                </p>
+              )}
+            </div>
+          </div>
+        ) : (
+          activeCategory?.description && (
+            <p className="mb-7 max-w-xl font-serif text-base italic text-fg-muted">
+              {activeCategory.description}
+            </p>
+          )
         )}
 
         {activeItems.length === 0 ? (
@@ -199,7 +227,7 @@ function MenuCard({
         onClick={onOpen}
         className="group hairline flex w-full items-stretch gap-4 overflow-hidden rounded-3xl border border-line bg-elevated/40 p-3 text-left transition-all duration-500 hover:border-lime/30 hover:bg-elevated/70 sm:flex-col sm:gap-0 sm:p-0"
       >
-        <div className="relative aspect-square w-24 shrink-0 overflow-hidden rounded-2xl bg-ink-deep sm:aspect-[4/3] sm:w-full sm:rounded-b-none sm:rounded-t-3xl">
+        <div className="photo-wash relative aspect-square w-24 shrink-0 overflow-hidden rounded-2xl bg-ink-deep sm:aspect-[4/3] sm:w-full sm:rounded-b-none sm:rounded-t-3xl">
           {item.imageUrl ? (
             <Image
               src={item.imageUrl}
@@ -334,7 +362,7 @@ function MenuItemDialog({
             </button>
 
             {item.imageUrl ? (
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[2rem] bg-ink-deep">
+              <div className="photo-wash relative aspect-[4/3] w-full overflow-hidden rounded-t-[2rem] bg-ink-deep">
                 <Image
                   src={item.imageUrl}
                   alt={item.name}
@@ -342,7 +370,6 @@ function MenuItemDialog({
                   sizes="(max-width: 640px) 100vw, 512px"
                   className="object-cover"
                 />
-                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink to-transparent" />
               </div>
             ) : (
               <div className="flex h-32 items-center justify-center rounded-t-[2rem] bg-gradient-to-br from-elevated to-ink-deep">

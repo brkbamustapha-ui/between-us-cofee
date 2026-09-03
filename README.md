@@ -35,10 +35,19 @@ Détails dans [`public/brand/README.md`](public/brand/README.md).
 Le menu de référence (`vemenu.ve-solution.com`) est **bloqué par la politique réseau**
 de l'environnement de génération. Aucun plat, prix ou description n'a été inventé.
 
-La structure du menu est complète (5 catégories, 15 emplacements) mais chaque produit
-est un **espace réservé** marqué `isPlaceholder` : il s'affiche avec un badge
-« À renseigner » sur le site public, un avertissement sur la carte, et il est exclu
-des données structurées lues par Google.
+Les **neuf catégories sont en revanche les vraies**, communiquées par la maison et
+dans son ordre : Brunch, Hot Coffee, Cold Coffee, Hot Tea, Iced Tea, Frappuccino,
+Mocktails, Jus Naturels, Refreshers.
+
+Seuls les **produits** manquent. Chaque catégorie contient deux espaces réservés
+marqués `isPlaceholder` : ils s'affichent avec un badge « À renseigner » sur le site
+public, un avertissement en tête de carte, et sont exclus des données structurées
+lues par Google.
+
+Chaque catégorie accepte aussi une **photo de section**, affichée en bandeau au-dessus
+de ses produits (`/admin/menu/categories` → champ Image). Toute photo téléversée est
+automatiquement harmonisée avec la palette du site (voile vert profond + reflet lime),
+et un aplat garantit la lisibilité du titre posé dessus, quelle que soit l'image.
 
 **Trois façons de saisir la vraie carte** :
 
@@ -123,8 +132,10 @@ dans `/admin/contact` :
   Tant qu'elle est vide, le panneau affiche un bouton « Voir sur Google Maps » plutôt
   qu'un vide.
 
-Deux autres champs facultatifs mais utiles : le **téléphone** et le **WhatsApp**, qui
-activent le bouton d'appel, la réservation par message et le lien social WhatsApp.
+Le **téléphone** est en place : `0553 00 74 14`. Il alimente le bouton d'appel, le
+WhatsApp, la réservation par message et le bouton social WhatsApp. Il est stocké au
+format local et converti automatiquement en international (`tel:+213553007414`,
+`wa.me/213553007414`) — un visiteur à l'étranger peut donc appeler.
 
 Si vous connaissez l'URL directe de la page Facebook (`facebook.com/<nom-de-page>`),
 préférez-la au lien de partage dans `/admin/socials` : elle est plus stable et mieux
@@ -245,7 +256,7 @@ npm run lint         # ESLint
 | `/admin/dashboard` | Statistiques, alertes, accès rapides |
 | `/admin/content` | Hero, À propos, Sections éditoriales, Footer |
 | `/admin/menu` | Produits : nom, prix, description, photo, badges, ordre, import JSON |
-| `/admin/menu/categories` | Catégories : nom, slug, description, ordre |
+| `/admin/menu/categories` | Catégories : nom, slug, description, photo de section, ordre |
 | `/admin/gallery` | Photos : téléversement multiple, alt, légende, ordre |
 | `/admin/videos` | Vidéos : fichier, miniature, titre, ordre |
 | `/admin/reservations` | Demandes reçues + paramètres du formulaire |

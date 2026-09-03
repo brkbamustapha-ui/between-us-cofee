@@ -71,21 +71,38 @@ export function normalizePhone(value: string): string {
   return plus + trimmed.replace(/\D/g, '');
 }
 
-export function telHref(phone: string): string {
-  const normalized = normalizePhone(phone);
-  return normalized ? `tel:${normalized}` : '';
-}
+/** Indicatif appliqué aux numéros saisis au format local. L'établissement est
+ *  à Oran ; un numéro d'un autre pays doit être saisi avec son indicatif. */
+const DEFAULT_COUNTRY_CODE = '213';
 
 /**
- * Lien WhatsApp. `wa.me` exige un numéro international sans `+` ni séparateur ;
- * un numéro algérien saisi en `0X XX XX XX XX` est converti en `213XXXXXXXXX`.
+ * Met un numéro au format international, sans `+` ni séparateur.
+ *
+ * Un numéro algérien saisi localement (« 0553 00 74 14 ») devient
+ * « 213553007414 » : il reste composable depuis l'Algérie et le devient depuis
+ * l'étranger. Un numéro déjà international (`+33…`, `0033…`) passe inchangé.
  */
-export function whatsappHref(phone: string, message?: string): string {
-  let digits = normalizePhone(phone).replace('+', '');
+export function internationalPhone(value: string): string {
+  let digits = normalizePhone(value).replace('+', '');
   if (!digits) return '';
 
   if (digits.startsWith('00')) digits = digits.slice(2);
-  if (digits.startsWith('0')) digits = `213${digits.slice(1)}`;
+  if (digits.startsWith('0')) digits = `${DEFAULT_COUNTRY_CODE}${digits.slice(1)}`;
+
+  return digits;
+}
+
+/** Lien d'appel. Le format international fonctionne depuis n'importe quel pays,
+ *  là où un `tel:0553…` n'aboutit que depuis une ligne algérienne. */
+export function telHref(phone: string): string {
+  const digits = internationalPhone(phone);
+  return digits ? `tel:+${digits}` : '';
+}
+
+/** Lien WhatsApp — `wa.me` exige le format international sans `+`. */
+export function whatsappHref(phone: string, message?: string): string {
+  const digits = internationalPhone(phone);
+  if (!digits) return '';
 
   const base = `https://wa.me/${digits}`;
   return message ? `${base}?text=${encodeURIComponent(message)}` : base;
