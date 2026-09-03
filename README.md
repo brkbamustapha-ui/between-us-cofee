@@ -10,16 +10,25 @@ et les changements sont visibles **immédiatement** sur le site.
 
 ## ⚠️ Deux points à traiter avant la mise en ligne
 
-### 1. Le logo officiel n'a pas pu être récupéré
+### 1. Le fichier source du logo n'est pas dans le dépôt
 
-Les fichiers de `public/brand/` sont des **placeholders** qui reproduisent l'identité
-décrite (vert profond `#002C25`, monogramme lime `#D5FF72`, typographie épaisse),
-mais ce ne sont pas les fichiers officiels.
+Le logo a été communiqué en image, mais le fichier n'a jamais atteint le dépôt
+(`photos/` ne contient que son README). Les assets de `public/brand/` ont donc été
+**vectorisés à partir de cette image** :
 
-**Pour installer le vrai logo** : `/admin` → **Paramètres** → « Identité visuelle » →
-téléverser le logo complet et le monogramme. Le header, le hero, la scène 3D, le
-footer et les partages sociaux basculent automatiquement dessus. Détails dans
-[`public/brand/README.md`](public/brand/README.md).
+- le **monogramme est une reconstruction fidèle** — géométrie reproduite à
+  l'identique (demi-disque supérieur coupé en diagonale, demi-disque inférieur, bloc
+  du « U » à fond arrondi fendu d'une entaille fine) ;
+- les **couleurs ont été relevées à l'œil** (`#0A2B1E` / `#D3F58C`), pas
+  échantillonnées dans un fichier : très proches, à quelques points près ;
+- le **mot-symbole utilise Outfit ExtraBold**, proche de l'original sans en être la
+  police exacte.
+
+**Pour un rendu strictement conforme** : `/admin` → **Paramètres** → « Identité
+visuelle » → téléverser le logo complet et le monogramme. Le header, le hero, la
+scène 3D, le footer et les partages sociaux basculent dessus, sans jamais déformer le
+fichier. La section « Couleurs » de la même page permet de corriger les deux teintes.
+Détails dans [`public/brand/README.md`](public/brand/README.md).
 
 ### 2. La carte officielle n'a pas pu être lue
 

@@ -2,31 +2,34 @@
 
 /* ==========================================================================
    BETWEEN US COFFEE & BRUNCH — Design tokens
-   Palette dérivée du logo : vert profond presque noir + vert lime.
-   Ajuster ici si les valeurs exactes du logo officiel diffèrent.
+   Palette relevée sur le logo officiel : vert forêt profond + lime pastel.
+   Ces deux valeurs sont la source de vérité de tout le site ; les modifier ici
+   suffit à repeindre l'ensemble. Elles sont aussi éditables sans toucher au
+   code depuis /admin/settings (elles alimentent alors le thème du navigateur
+   et le manifeste de l'application).
    ========================================================================== */
 
 @theme {
   /* — Couleurs de marque — */
-  --color-ink: #002c25;
-  --color-ink-deep: #00110e;
-  --color-elevated: #043d33;
-  --color-soft: #05564733;
-  --color-lime: #d5ff72;
-  --color-lime-deep: #b4e24f;
-  --color-lime-glow: #e6ffab;
-  --color-cream: #f4f1e8;
+  --color-ink: #0a2b1e;
+  --color-ink-deep: #05170f;
+  --color-elevated: #12402d;
+  --color-soft: #1a563b33;
+  --color-lime: #d3f58c;
+  --color-lime-deep: #b4e062;
+  --color-lime-glow: #e8fcc2;
+  --color-cream: #f2f5e9;
   --color-clay: #c8a97e;
 
-  /* — Texte — */
-  --color-fg: #f4f1e8;
-  --color-fg-muted: #a7bdb3;
-  --color-fg-subtle: #6f8b81;
-  --color-on-lime: #00201b;
+  /* — Texte (contrastes vérifiés sur --color-ink : 13,6 / 12,3 / 7,1 / 5,1) — */
+  --color-fg: #f2f5e9;
+  --color-fg-muted: #9db8a6;
+  --color-fg-subtle: #7e9e89;
+  --color-on-lime: #0a2b1e;
 
   /* — Bordures & surfaces — */
   --color-line: #ffffff14;
-  --color-line-strong: #d5ff7233;
+  --color-line-strong: #d3f58c33;
 
   /* — Feedback — */
   --color-danger: #ff8a7a;
@@ -49,7 +52,7 @@
   /* — Ombres — */
   --shadow-soft: 0 1px 2px #0000001a, 0 12px 32px -12px #00000059;
   --shadow-lift: 0 2px 4px #0000001f, 0 28px 60px -24px #00000073;
-  --shadow-lime: 0 18px 60px -22px #d5ff7259;
+  --shadow-lime: 0 18px 60px -22px #d3f58c59;
 
   /* — Easing — */
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);

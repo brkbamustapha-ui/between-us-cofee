@@ -1,13 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 200" role="img" aria-label="Between Us — Coffee &amp; Brunch">
-  <rect width="560" height="200" rx="24" fill="#002C25"/>
-  <g transform="translate(36 36)">
-    <g fill="none" stroke="#D5FF72" stroke-width="11" stroke-linejoin="round">
-      <path d="M25 90 V38 H44 a13 13 0 0 1 0 26 H25 M25 64 H48 a13 13 0 0 1 0 26 H25"/>
-      <path d="M75 38 V74 a16 16 0 0 0 32 0 V38"/>
-    </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 240" role="img" aria-label="Between Us — Coffee &amp; Brunch">
+  <rect width="720" height="240" rx="24" fill="#0A2B1E"/>
+  <g transform="translate(56 46) scale(0.51724)" fill="#D3F58C" fill-rule="evenodd">
+    <path d="M0 120 L62 0 A60 60 0 0 1 62 120 Z"/>
+    <path d="M0 128 H51 A81 81 0 0 1 51 290 H0 Z"/>
+    <path d="M138 0 H270 V224 A66 66 0 0 1 138 224 Z M206 0 H211 V212.5 A2.5 2.5 0 0 1 206 212.5 Z"/>
   </g>
-  <g font-family="'Outfit','Poppins','Montserrat','Helvetica Neue',Arial,sans-serif" fill="#D5FF72">
-    <text x="188" y="98" font-size="54" font-weight="700" letter-spacing="-1.5">BETWEEN US</text>
-    <text x="190" y="134" font-size="21" font-weight="500" letter-spacing="7" fill="#F4F1E8">COFFEE &amp; BRUNCH</text>
+  <g font-family="'Outfit','Poppins','Montserrat','Helvetica Neue',Arial,sans-serif">
+    <text x="256" y="126" font-size="62" font-weight="800" letter-spacing="-1.5" fill="#D3F58C">Between Us</text>
+    <text x="259" y="166" font-size="21" font-weight="500" letter-spacing="7" fill="#F2F5E9">COFFEE &amp; BRUNCH</text>
   </g>
 </svg>

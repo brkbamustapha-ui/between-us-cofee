@@ -47,6 +47,10 @@ export function LogoMark({
     );
   }
 
+  // Monogramme vectorisé d'après le logo officiel : le « B » est formé de deux
+  // demi-disques pleins (celui du haut coupé en diagonale), le « U » d'un bloc
+  // à fond arrondi fendu d'une entaille fine. `fillRule="evenodd"` creuse
+  // l'entaille dans le bloc.
   return (
     <svg
       viewBox="0 0 128 128"
@@ -54,15 +58,15 @@ export function LogoMark({
       aria-hidden="true"
       focusable="false"
     >
-      <rect width="128" height="128" rx="30" fill="var(--color-ink)" />
+      <rect width="128" height="128" rx="28" fill="var(--color-ink)" />
       <g
-        fill="none"
-        stroke="var(--color-lime)"
-        strokeWidth="11"
-        strokeLinejoin="round"
+        transform="translate(24.9 22) scale(0.28966)"
+        fill="var(--color-lime)"
+        fillRule="evenodd"
       >
-        <path d="M25 90 V38 H44 a13 13 0 0 1 0 26 H25 M25 64 H48 a13 13 0 0 1 0 26 H25" />
-        <path d="M75 38 V74 a16 16 0 0 0 32 0 V38" />
+        <path d="M0 120 L62 0 A60 60 0 0 1 62 120 Z" />
+        <path d="M0 128 H51 A81 81 0 0 1 51 290 H0 Z" />
+        <path d="M138 0 H270 V224 A66 66 0 0 1 138 224 Z M206 0 H211 V212.5 A2.5 2.5 0 0 1 206 212.5 Z" />
       </g>
     </svg>
   );

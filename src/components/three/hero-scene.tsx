@@ -28,7 +28,7 @@ import type { DeviceTier } from '@/hooks/use-device-tier';
  * défiler dans le menu.
  */
 
-const LIME = '#d5ff72';
+const LIME = '#d3f58c';
 
 interface Budget {
   beans: number;
@@ -113,9 +113,9 @@ function useLogoTexture(url: string): LoadedLogo | null {
  *
  *  - paysage : le texte occupe la moitié gauche, le médaillon vient occuper la
  *    droite à pleine présence, anneaux compris ;
- *  - portrait : le texte occupe tout l'écran. Le médaillon devient alors un
- *    filigrane centré, très effacé (opacité 0,18) et sans anneaux — il donne de
- *    la matière au fond sans jamais entrer en concurrence avec le titre.
+ *  - portrait : le texte descend du surtitre jusqu'aux boutons et ne laisse
+ *    libre que la bande haute du hero. Le monogramme y est remonté, réduit et
+ *    atténué, sans anneaux — il ne passe jamais derrière une ligne de texte.
  *
  * C'est la règle « la 3D ne doit jamais empêcher la lecture » appliquée
  * littéralement : sur un petit écran, la 3D recule.
@@ -129,9 +129,10 @@ function useMedallionLayout() {
     if (portrait) {
       return {
         portrait: true,
-        position: [0, viewport.height * 0.06, -1.4] as [number, number, number],
-        scale: viewport.width * 0.78,
-        opacity: 0.18,
+        // Bande haute, entre l'en-tête et le surtitre.
+        position: [0, viewport.height * 0.28, -1.2] as [number, number, number],
+        scale: viewport.width * 0.55,
+        opacity: 0.3,
         showRings: false,
       };
     }
@@ -161,10 +162,12 @@ function Medallion({ url, segments }: { url: string; segments: number }) {
   useFrame((state, delta) => {
     const t = state.clock.elapsedTime;
 
-    // Balancement très lent : le logo respire, il ne tourne pas sur lui-même.
+    // Balancement très lent et de faible amplitude : le logo respire sans
+    // jamais paraître déformé par la perspective — un monogramme trop incliné
+    // n'est plus le logo de la marque.
     if (glyph.current) {
-      glyph.current.rotation.y = Math.sin(t * 0.26) * 0.22;
-      glyph.current.rotation.x = Math.sin(t * 0.19) * 0.08;
+      glyph.current.rotation.y = Math.sin(t * 0.26) * 0.12;
+      glyph.current.rotation.x = Math.sin(t * 0.19) * 0.05;
     }
     // Les deux anneaux tournent en sens inverse : la profondeur se lit sans
     // qu'aucun mouvement n'attire l'œil.
@@ -174,7 +177,7 @@ function Medallion({ url, segments }: { url: string; segments: number }) {
 
   return (
     <group position={position} scale={scale}>
-      <Float speed={1} rotationIntensity={0.1} floatIntensity={showRings ? 0.35 : 0.15}>
+      <Float speed={1} rotationIntensity={0.05} floatIntensity={showRings ? 0.3 : 0.12}>
         <mesh ref={glyph}>
           <planeGeometry args={[0.72, 0.72]} />
           {logo && (
@@ -443,7 +446,7 @@ export default function HeroScene({
         <Beans count={budget.beans} />
         <Dust count={budget.particles} />
 
-        <fog attach="fog" args={['#002c25', 6, 14]} />
+        <fog attach="fog" args={['#0a2b1e', 6, 14]} />
       </Canvas>
     </div>
   );
