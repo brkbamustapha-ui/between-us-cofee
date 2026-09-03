@@ -40,11 +40,45 @@ est un **espace réservé** marqué `isPlaceholder` : il s'affiche avec un badge
 « À renseigner » sur le site public, un avertissement sur la carte, et il est exclu
 des données structurées lues par Google.
 
-**Deux façons de saisir la vraie carte** :
+**Trois façons de saisir la vraie carte** :
 
-- **Produit par produit** : `/admin/menu` → sélectionner une catégorie → modifier nom,
-  description, prix, photo, badges → décocher « emplacement à renseigner ».
-- **En une fois** : `/admin/menu` → « Importer la carte officielle » → coller un JSON :
+**1. Coller la carte en texte** (le plus rapide, y compris depuis un téléphone) —
+`/admin/menu` → « Importer la carte officielle » → onglet **Texte**. Collez la carte
+telle que vous la copiez depuis une page en ligne, un PDF ou un message :
+
+```
+COFFEE
+Espresso ............ 150 DA
+Cappuccino — lait texturé   300
+Latte 350
+
+BRUNCH
+Brunch complet [best]  1 800 DA
+> Œufs, pain maison, jus pressé
+Pancakes 900
+```
+
+Les règles de lecture :
+
+| Écriture | Résultat |
+| --- | --- |
+| Ligne finissant par un prix | Un produit |
+| Ligne sans prix | Une catégorie (ouvre une section) |
+| Ligne commençant par `>` | Description du produit précédent |
+| `Nom — description 350` | Sépare aussi la description |
+| `[best]` `[nouveau]` `[populaire]` `[reco]` | Ajoute un badge |
+| `#` en début de ligne | Force la catégorie |
+
+Les montants sont reconnus avec ou sans devise, en `1 800`, `1.800`, `1,800` ou
+`900,00`. Un nombre nu inférieur à 20 n'est **pas** pris pour un prix (« Formule 2 »
+reste un intitulé). Un **aperçu affiche exactement ce qui sera créé** avant tout
+enregistrement, et signale les lignes non reprises.
+
+**2. Produit par produit** — `/admin/menu` → sélectionner une catégorie → modifier
+nom, description, prix, photo, badges → décocher « emplacement à renseigner ».
+
+**3. En JSON** (pour un import piloté depuis un autre outil) — même écran, onglet
+**JSON** :
 
 ```json
 {
