@@ -1,104 +1,184 @@
-import type { SiteContent } from '@/types/content';
+import type { MenuBadge, SiteContent } from '@/types/content';
 
 /**
- * Contenu par défaut utilisé au premier démarrage (et comme base du seed SQL).
+ * Contenu par défaut utilisé au premier démarrage (et base du seed SQL).
  *
- * ⚠️ IMPORTANT — CARTE DU MENU
- * La carte officielle (vemenu.ve-solution.com) n'était pas accessible depuis
- * l'environnement de génération : le domaine est bloqué par la politique réseau.
- * Aucun plat, prix ou description n'a donc été inventé.
- *
- * Les produits ci-dessous sont des EMPLACEMENTS VIDES (`isPlaceholder: true`,
- * `price: null`). Ils existent uniquement pour que la structure du menu soit
- * complète et immédiatement éditable depuis `/admin/menu`. Le site public
- * affiche un avertissement tant qu'il reste des emplacements non renseignés.
+ * La carte provient des captures du menu officiel fournies par la maison ; voir
+ * le commentaire de `MENU` ci-dessous pour les deux réserves qui subsistent.
  */
 
-const PLACEHOLDER_NOTE =
-  'Emplacement à renseigner depuis le dashboard (/admin/menu) avec la carte officielle Between Us.';
 
-/** Fabrique un emplacement de produit vide, explicitement marqué comme tel. */
-function placeholderItem(
-  categoryId: string,
-  index: number,
-): SiteContent['items'][number] {
-  return {
-    id: `${categoryId}-placeholder-${index}`,
-    categoryId,
-    name: `Produit ${index} — à renseigner`,
-    description: PLACEHOLDER_NOTE,
-    price: null,
-    imageUrl: '',
-    badges: [],
-    position: index,
-    enabled: true,
-    isPlaceholder: true,
-  };
-}
-
-const CATEGORY_SEEDS: {
+/**
+ * Carte officielle Between Us, relevée sur les captures du menu fournies par la
+ * maison (application vemenu). Noms, descriptions et prix sont repris tels
+ * qu'ils y figurent — rien n'est inventé.
+ *
+ * Deux réserves, signalées plutôt que masquées :
+ *  - certains produits n'affichent AUCUN prix dans l'application ; ils portent
+ *    ici `price: null` et le site indique « Prix sur place » ;
+ *  - quelques intitulés y sont tronqués par la largeur de l'écran (« Frappuccino
+ *    crème… ») ; ils ont été complétés d'après leur propre description, ce qui
+ *    reste une reconstitution à confirmer.
+ *
+ * Le domaine du menu en ligne étant bloqué par la politique réseau de
+ * l'environnement de génération, ces captures sont la seule source disponible.
+ */
+const MENU: {
   id: string;
   name: string;
   slug: string;
   description: string;
+  items: [name: string, description: string, price: number | null, badges: MenuBadge[]][];
 }[] = [
-  // Sections réelles de la carte, communiquées par la maison, dans son ordre.
-  // Les descriptions sont volontairement génériques : elles expliquent ce que
-  // recouvre l'intitulé, sans rien affirmer sur des produits précis. À
-  // personnaliser depuis /admin/menu/categories.
   {
     id: 'cat-brunch',
     name: 'Brunch',
     slug: 'brunch',
     description: 'Assiettes salées et sucrées, du matin au début d’après-midi.',
+    items: [
+      ['Pappus', 'Omelette, bacon, peperoni, poulet fumé artisanale, salade', 1300, []],
+      ['Bioday', 'Bole granola, jus detox', 1000, []],
+      ['Toast avocat saumon', '', 850, []],
+      ['Toast fromage tomates', '', 450, []],
+      ['Oeufs au plat avec salade', '', 350, []],
+      ['Croissant salé', '3 types de charcuterie artisanale au choix', 750, []],
+      ['Bloom', 'Croissant salé, oeufs omelette, fromage, bacon, viande ou poulet', 1500, []],
+      ['Sunflower', 'Toast, purée d’avocat, saumon, oeufs', 1700, []],
+      ['Matina', 'Boisson chaude, boisson froide, mignardises, viennoiseries', 1500, []],
+      ['Magnolia', 'Toast, fromage, champignons frais, tomates cerises', null, []],
+    ],
   },
   {
     id: 'cat-hot-coffee',
     name: 'Hot Coffee',
     slug: 'hot-coffee',
-    description: 'Espresso, filtre et boissons lactées, servis chauds.',
+    description: 'Espresso, boissons lactées et chocolats chauds.',
+    items: [
+      ['Espresso', 'One shot espresso', null, []],
+      ['Espresso Doppio', 'Double shot espresso', null, []],
+      ['Espresso macchiato', 'One shot espresso + mousse de lait', 350, []],
+      ['Americano', 'One shot espresso + eau chaude', 400, []],
+      ['Latte', 'Double shot espresso + lait', 350, []],
+      ['Cappuccino', 'Double shot espresso + lait + mousse de lait + cacao', 400, []],
+      ['Spanish latte', 'Lait concentré + espresso + lait', 450, []],
+      ['Caramel macchiato', 'Sirop vanille + espresso + lait + caramel', 450, []],
+      ['Café aromatisé', 'Espresso + sirop au choix', null, []],
+      ['Affogato', 'Espresso + glace vanille', 400, []],
+      ['Dalgona coffee', 'Lait + mousse de café', 450, []],
+      ['Mocha', 'Espresso + lait + nutella + chantilly', 500, []],
+      ['White mocha', 'Espresso, chocolat blanc, lait, chantilly', 500, []],
+      ['Milk chocolate', 'Lait + nesquik + sirop chocolat', 350, []],
+      ['White hot chocolat', 'Lait + chocolat blanc + sirop chocolat blanc', 450, []],
+      ['Biscoff latte', 'Lait + crème biscoff + chantilly', 450, []],
+      ['Fluffy', 'Lait + crème au choix + mousse de café', null, []],
+      ['Cortado', 'Espresso + lait', 250, []],
+      ['Sweet latte', 'Café + lait + sirop au choix', null, []],
+    ],
   },
   {
     id: 'cat-cold-coffee',
     name: 'Cold Coffee',
     slug: 'cold-coffee',
     description: 'Cafés servis sur glace.',
+    items: [
+      ['Iced americano', 'Espresso + eau + glaçons', 400, []],
+      ['Iced latte', 'Lait + espresso + glaçons', 350, []],
+      ['Iced cappuccino', 'Lait + mousse de lait + espresso + glaçons', 400, []],
+      ['Iced spanish latte', 'Lait concentré + lait + espresso + glaçons', 450, []],
+      ['Iced caramel macchiato', 'Sirop vanille + lait + espresso + caramel + glaçons', 450, []],
+      ['Iced dalgona coffee', 'Lait + mousse de café + glaçons', 450, []],
+      ['Iced mocha', 'Lait + nutella + espresso + chantilly + glaçons', 500, []],
+      ['Iced white mocha', 'Lait + sirop chocolat blanc + espresso + chantilly + glaçons', 500, []],
+      ['Iced milk chocolate', 'Lait + nesquik + sirop chocolat + glaçons', 350, []],
+      ['Iced white chocolate', 'Lait + sirop chocolat blanc + glaçons', 450, []],
+      ['Iced sweet latte', 'Lait + espresso + sirop au choix', null, []],
+    ],
   },
   {
     id: 'cat-hot-tea',
     name: 'Hot Tea',
     slug: 'hot-tea',
-    description: 'Thés et infusions servis chauds.',
+    description: 'Thés, infusions et matcha servis chauds.',
+    items: [
+      ['Tea infusion', 'Infusion selon la disponibilité', 200, []],
+      ['The maison', 'Thé + menthe', 150, ['popular']],
+      ['Matcha tea latte', 'Thé matcha + lait', 450, []],
+      ['Chai tea latte', 'Chai tea + lait', 450, []],
+      ['Vanilla matcha', 'Sirop vanille + matcha tea + lait', 550, []],
+      ['Strawberry matcha', 'Sirop fraise + matcha tea + lait', 650, []],
+    ],
   },
   {
     id: 'cat-iced-tea',
     name: 'Iced Tea',
     slug: 'iced-tea',
-    description: 'Thés glacés.',
+    description: 'Thés et matcha servis glacés.',
+    items: [
+      ['Iced tea', 'Thé glacé + sirop au choix', null, []],
+      ['Iced matcha tea latte', 'Thé matcha + lait + glaçons', 450, []],
+      ['Iced chai tea latte', 'Thé chai + lait + glaçons', 450, []],
+      ['Iced vanilla matcha', 'Sirop vanille + thé matcha + lait + glaçons', 650, []],
+      ['Iced strawberry matcha', 'Lait + matcha tea + sirop fraises + glaçons', 650, []],
+    ],
   },
   {
     id: 'cat-frappuccino',
     name: 'Frappuccino',
     slug: 'frappuccino',
-    description: 'Cafés frappés, texture glacée et onctueuse.',
+    description: 'Cafés et crèmes frappés, texture glacée.',
+    items: [
+      ['Frappuccino matcha', 'Thé matcha + lait + glaçons', 600, []],
+      ['Frappuccino chai tea', 'Chai tea + lait + glaçons', 600, []],
+      ['Frappuccino coffee caramel', 'Lait + café + caramel + glaçons', 600, []],
+      ['Frappuccino café vanille', 'Lait + vanille + espresso + glaçons', 600, []],
+      ['Frappuccino café noisette', 'Lait + espresso + sirop noisette + glaçons', 600, []],
+      ['Frappuccino café Mocha', 'Lait + espresso + nutella + glaçons', 600, []],
+      ['Frappuccino café White chocolat', 'Lait + espresso + white chocolat + glaçons', 600, []],
+      ['Frappuccino crème pistache', 'Crème pistache + lait + glaçons', 700, []],
+      ['Frappuccino crème caramel', 'Crème caramel + lait + glaçons', 700, []],
+      ['Frappuccino crème chocolat', 'Lait + nutella + deuxième type de chocolat + glaçons', 700, []],
+      ['Frappuccino crème Coco', 'Lait + nutella + noix de coco + glaçons', 700, []],
+    ],
   },
   {
     id: 'cat-mocktails',
     name: 'Mocktails',
     slug: 'mocktails',
     description: 'Cocktails sans alcool.',
+    items: [
+      ['Virgin Mojito', 'Sprite + citron + menthe + glaçons', 400, []],
+      ['Mojito aromatisé', 'Menthe + citron + sprite + sirop au choix', null, []],
+      ['Pina colada', 'Jus d’ananas + sirop coco + lait concentré', 450, []],
+      ['Bora bora', 'Jus d’ananas + sirop passion + grenadine', 450, []],
+      ['Sunset', 'Jus d’ananas + jus d’orange + sirop grenadine', 450, []],
+      ['Bleu lagoun', 'Sprite + bleu curaçao + citron + pêche', 450, []],
+    ],
   },
   {
     id: 'cat-jus-naturels',
     name: 'Jus Naturels',
     slug: 'jus-naturels',
     description: 'Jus de fruits frais.',
+    items: [
+      ['Jus d’orange', '', 500, []],
+      ['Jus de banane', '', 500, []],
+      ['Jus de citron', '', 500, []],
+      ['Cocktail de saison', 'Fruits de saison', 500, []],
+    ],
   },
   {
     id: 'cat-refreshers',
     name: 'Refreshers',
     slug: 'refreshers',
     description: 'Boissons fraîches et désaltérantes.',
+    items: [
+      ['Refresher strawberry', 'Eau + purée de fraises + glaçons + sirop fraise', 450, []],
+      ['Refresher passion fruits', 'Eau + purée fruit de la passion + glaçons + sirop fruits de la passion', 450, []],
+      ['Refresher frozen strawberry', 'Eau + purée fraise + double glaçon + sirop fraise', 450, []],
+      ['Refresher frozen passion fruits', 'Eau + double glaçon + purée fruit de la passion + sirop fruits de la passion', 450, []],
+      ['Paradise drink', 'Ananas + lait + coconut + mango + glaçons', 550, []],
+      ['Pink drink', 'Lait + sirop fraises + purée fruits rouges', 550, []],
+    ],
   },
 ];
 
@@ -281,22 +361,32 @@ export const defaultContent: SiteContent = {
     },
   ],
 
-  categories: CATEGORY_SEEDS.map((c, i) => ({
-    id: c.id,
-    name: c.name,
-    slug: c.slug,
-    description: c.description,
+  categories: MENU.map((category, index) => ({
+    id: category.id,
+    name: category.name,
+    slug: category.slug,
+    description: category.description,
+    // Photo de section : à téléverser depuis /admin/menu/categories. Tant
+    // qu'elle est vide, la section affiche simplement son texte.
     imageUrl: '',
-    position: i + 1,
+    position: index + 1,
     enabled: true,
   })),
 
-  // Deux emplacements par catégorie : assez pour montrer la mise en page des
-  // cartes, assez peu pour ne pas noyer la page sous neuf sections d'exemples.
-  items: CATEGORY_SEEDS.flatMap((c) => [
-    placeholderItem(c.id, 1),
-    placeholderItem(c.id, 2),
-  ]),
+  items: MENU.flatMap((category) =>
+    category.items.map(([name, description, price, badges], index) => ({
+      id: `${category.id}-${index + 1}`,
+      categoryId: category.id,
+      name,
+      description,
+      price,
+      imageUrl: '',
+      badges,
+      position: index + 1,
+      enabled: true,
+      isPlaceholder: false,
+    })),
+  ),
 
   // Photos et vidéos sont ajoutées depuis le dashboard : les sections
   // correspondantes se masquent automatiquement tant qu'elles sont vides,

@@ -160,6 +160,22 @@ export function deleteFile(url: string): Promise<unknown> {
   return request('/api/admin/upload', { method: 'DELETE', json: { url } });
 }
 
+export type LibraryEntry = {
+  url: string;
+  name: string;
+  bytes: number;
+  kind: 'image' | 'video';
+  source: 'repo' | 'upload';
+};
+
+/** Médias déjà présents dans le projet : `public/` et téléversements locaux. */
+export function listMediaLibrary(): Promise<{
+  files: LibraryEntry[];
+  truncated: boolean;
+}> {
+  return request('/api/admin/media/library');
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Compte et maintenance                                                      */
 /* -------------------------------------------------------------------------- */
