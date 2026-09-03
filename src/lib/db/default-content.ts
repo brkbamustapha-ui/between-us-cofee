@@ -136,7 +136,13 @@ export const defaultContent: SiteContent = {
     addressLine: '',
     city: 'Oran',
     country: 'Algérie',
-    mapsUrl: '',
+    // Lien Google Maps officiel : alimente le bouton « Itinéraire ». Il n'a pas
+    // pu être résolu en adresse postale depuis l'environnement de génération
+    // (domaine bloqué), d'où `addressLine` toujours vide plutôt qu'inventée.
+    mapsUrl: 'https://maps.app.goo.gl/7Ju39b3Fmu2cVfVVA',
+    // Un lien court ne peut pas s'afficher dans une iframe : l'intégration
+    // demande une URL `maps.google.com/…&output=embed`, à copier depuis
+    // Google Maps → Partager → Intégrer une carte.
     mapsEmbedUrl: '',
     hours: [
       { day: 1, open: '08:00', close: '23:00', closed: false },
@@ -266,30 +272,38 @@ export const defaultContent: SiteContent = {
   gallery: [],
   videos: [],
 
+  // Comptes officiels communiqués par la maison. Les paramètres de suivi des
+  // liens de partage (`igsi`, `_r`, `_t`) ont été retirés : ils identifient la
+  // session de la personne qui a partagé le lien et n'ont rien à faire sur un
+  // site public. Ces URL alimentent aussi `sameAs` dans les données
+  // structurées, ce qui rattache le lieu à ses profils pour les moteurs.
   socials: [
     {
       id: 'soc-instagram',
       platform: 'instagram',
-      url: '',
-      handle: '',
+      url: 'https://www.instagram.com/betweenuscoffeeoran',
+      handle: '@betweenuscoffeeoran',
       position: 1,
-      enabled: false,
+      enabled: true,
     },
     {
       id: 'soc-tiktok',
       platform: 'tiktok',
-      url: '',
-      handle: '',
+      url: 'https://www.tiktok.com/@between_us_coffee',
+      handle: '@between_us_coffee',
       position: 2,
-      enabled: false,
+      enabled: true,
     },
     {
       id: 'soc-facebook',
       platform: 'facebook',
-      url: '',
-      handle: '',
+      // Lien de partage fourni par la page. Si vous connaissez l'URL directe
+      // (facebook.com/<nom-de-page>), préférez-la : elle est plus stable et
+      // mieux comprise par les moteurs de recherche.
+      url: 'https://www.facebook.com/share/19HPGvabdY/',
+      handle: 'Between Us Coffee',
       position: 3,
-      enabled: false,
+      enabled: true,
     },
     {
       id: 'soc-whatsapp',

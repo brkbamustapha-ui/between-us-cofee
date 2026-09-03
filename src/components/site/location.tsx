@@ -135,12 +135,28 @@ export function Location({ contact }: { contact: ContactInfo }) {
                   className="absolute inset-0 h-full w-full border-0"
                 />
               ) : (
-                <div className="flex h-full flex-col items-center justify-center gap-3 px-6 py-16 text-center">
+                /* Sans URL d'intégration, le panneau resterait une zone morte.
+                   Tant qu'un lien Maps existe, on propose au moins d'ouvrir le
+                   lieu dans l'application — le visiteur n'est jamais bloqué. */
+                <div className="flex h-full flex-col items-center justify-center gap-4 px-6 py-16 text-center">
                   <MapPin className="h-8 w-8 text-lime/30" aria-hidden="true" />
-                  <p className="max-w-xs text-sm leading-relaxed text-fg-subtle">
-                    La carte s’affichera ici dès qu’un lien Google Maps aura été
-                    ajouté dans le dashboard.
-                  </p>
+                  {directions ? (
+                    <>
+                      <p className="max-w-xs text-sm leading-relaxed text-fg-subtle">
+                        Ouvrez le lieu dans Google Maps pour obtenir l’itinéraire
+                        depuis votre position.
+                      </p>
+                      <ButtonLink href={directions} variant="outline" size="sm">
+                        <Navigation className="h-4 w-4" aria-hidden="true" />
+                        Voir sur Google Maps
+                      </ButtonLink>
+                    </>
+                  ) : (
+                    <p className="max-w-xs text-sm leading-relaxed text-fg-subtle">
+                      La carte s’affichera ici dès qu’un lien Google Maps aura
+                      été ajouté dans le dashboard.
+                    </p>
+                  )}
                 </div>
               )}
             </div>

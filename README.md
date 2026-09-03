@@ -8,7 +8,7 @@ et les changements sont visibles **immédiatement** sur le site.
 
 ---
 
-## ⚠️ Deux points à traiter avant la mise en ligne
+## ⚠️ Trois points à traiter avant la mise en ligne
 
 ### 1. Le fichier source du logo n'est pas dans le dépôt
 
@@ -95,6 +95,40 @@ nom, description, prix, photo, badges → décocher « emplacement à renseigner
   ]
 }
 ```
+
+### 3. L'adresse postale exacte reste à saisir
+
+Les comptes officiels sont déjà en place et actifs sur le site :
+
+| | |
+| --- | --- |
+| Instagram | `instagram.com/betweenuscoffeeoran` |
+| TikTok | `tiktok.com/@between_us_coffee` |
+| Facebook | lien de partage `facebook.com/share/19HPGvabdY/` |
+| Google Maps | `maps.app.goo.gl/7Ju39b3Fmu2cVfVVA` |
+
+Les paramètres de suivi des liens de partage (`igsi`, `_r`, `_t`, `g_st`) ont été
+retirés : ils identifient la session de la personne qui a partagé le lien.
+
+Le lien Maps alimente le bouton « Itinéraire », mais il n'a **pas pu être résolu en
+adresse postale** — le domaine est bloqué par la politique réseau de l'environnement
+de génération. Aucune adresse n'a donc été inventée. Deux champs restent à remplir
+dans `/admin/contact` :
+
+- **Adresse** — la rue et le quartier. Elle apparaît alors sous « Nous trouver », dans
+  le pied de page et dans les données structurées lues par Google.
+- **Carte intégrée** — un lien court ne peut pas s'afficher dans une iframe. Ouvrez
+  Google Maps → **Partager** → **Intégrer une carte** → copiez l'URL du `src`
+  (`https://www.google.com/maps/embed?pb=…`) et collez-la dans « Carte intégrée ».
+  Tant qu'elle est vide, le panneau affiche un bouton « Voir sur Google Maps » plutôt
+  qu'un vide.
+
+Deux autres champs facultatifs mais utiles : le **téléphone** et le **WhatsApp**, qui
+activent le bouton d'appel, la réservation par message et le lien social WhatsApp.
+
+Si vous connaissez l'URL directe de la page Facebook (`facebook.com/<nom-de-page>`),
+préférez-la au lien de partage dans `/admin/socials` : elle est plus stable et mieux
+comprise par les moteurs de recherche.
 
 ---
 
@@ -253,7 +287,7 @@ src/
   hooks/                      détection d'appareil, gestion des collections
   types/content.ts            modèle de contenu
 supabase/schema.sql           schéma PostgreSQL + Storage + RLS
-public/brand/                 logo (placeholders à remplacer)
+public/brand/                 monogramme vectorisé + image de partage
 photos/                       dépôt de photos à partager
 ```
 
