@@ -1,0 +1,291 @@
+@import 'tailwindcss';
+
+/* ==========================================================================
+   BETWEEN US COFFEE & BRUNCH — Design tokens
+   Palette dérivée du logo : vert profond presque noir + vert lime.
+   Ajuster ici si les valeurs exactes du logo officiel diffèrent.
+   ========================================================================== */
+
+@theme {
+  /* — Couleurs de marque — */
+  --color-ink: #002c25;
+  --color-ink-deep: #00110e;
+  --color-elevated: #043d33;
+  --color-soft: #05564733;
+  --color-lime: #d5ff72;
+  --color-lime-deep: #b4e24f;
+  --color-lime-glow: #e6ffab;
+  --color-cream: #f4f1e8;
+  --color-clay: #c8a97e;
+
+  /* — Texte — */
+  --color-fg: #f4f1e8;
+  --color-fg-muted: #a7bdb3;
+  --color-fg-subtle: #6f8b81;
+  --color-on-lime: #00201b;
+
+  /* — Bordures & surfaces — */
+  --color-line: #ffffff14;
+  --color-line-strong: #d5ff7233;
+
+  /* — Feedback — */
+  --color-danger: #ff8a7a;
+  --color-warn: #ffce6a;
+  --color-ok: #7ee0a8;
+
+  /* — Typographie (injectée par next/font dans layout.tsx) — */
+  --font-display: var(--font-outfit), 'Outfit', 'Poppins', system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), 'Fraunces', 'Georgia', serif;
+  --font-sans: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* — Rayons — */
+  --radius-xs: 0.5rem;
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 2rem;
+  --radius-2xl: 2.75rem;
+
+  /* — Ombres — */
+  --shadow-soft: 0 1px 2px #0000001a, 0 12px 32px -12px #00000059;
+  --shadow-lift: 0 2px 4px #0000001f, 0 28px 60px -24px #00000073;
+  --shadow-lime: 0 18px 60px -22px #d5ff7259;
+
+  /* — Easing — */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Compense le header sticky lors des ancres */
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    /* Aucun overflow horizontal, jamais. */
+    overflow-x: clip;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Focus visible cohérent et accessible partout */
+  :focus-visible {
+    outline: 2px solid var(--color-lime);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: var(--color-lime);
+    color: var(--color-on-lime);
+  }
+
+  /* Cible tactile minimale sur mobile */
+  button,
+  a[role='button'],
+  [type='button'],
+  [type='submit'] {
+    touch-action: manipulation;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    /* Empêche le zoom automatique iOS sous 16px */
+    font-size: max(16px, 1rem);
+  }
+
+  img,
+  video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ==========================================================================
+   Utilitaires
+   ========================================================================== */
+
+@utility container-x {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 80rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 40rem) {
+    padding-inline: 2rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility section-y {
+  padding-block: 4.5rem;
+
+  @media (width >= 48rem) {
+    padding-block: 7rem;
+  }
+
+  @media (width >= 80rem) {
+    padding-block: 9rem;
+  }
+}
+
+/* Masque la scrollbar sur les rails horizontaux (catégories menu, galerie) */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--color-elevated) 55%, transparent);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--color-line);
+}
+
+/* Dégradé de texte lime → crème, pour les grands titres */
+@utility text-gradient-lime {
+  background: linear-gradient(
+    92deg,
+    var(--color-lime) 0%,
+    var(--color-lime-glow) 42%,
+    var(--color-cream) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Bord lumineux subtil, réutilisé sur les cartes premium */
+@utility hairline {
+  box-shadow: inset 0 1px 0 0 #ffffff12;
+}
+
+@utility safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ==========================================================================
+   Animations (toutes désactivables via prefers-reduced-motion)
+   ========================================================================== */
+
+@keyframes bu-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bu-shimmer {
+  0% {
+    background-position: -180% 0;
+  }
+  100% {
+    background-position: 180% 0;
+  }
+}
+
+@keyframes bu-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@keyframes bu-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes bu-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility animate-fade-up {
+  animation: bu-fade-up 0.7s var(--ease-out-quint) both;
+}
+
+@utility animate-float {
+  animation: bu-float 6s ease-in-out infinite;
+}
+
+@utility animate-marquee {
+  animation: bu-marquee 38s linear infinite;
+}
+
+@utility skeleton {
+  background: linear-gradient(
+    100deg,
+    #ffffff08 20%,
+    #ffffff16 42%,
+    #ffffff08 64%
+  );
+  background-size: 220% 100%;
+  animation: bu-shimmer 1.6s linear infinite;
+}
+
+/* Respecte impérativement le réglage système. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

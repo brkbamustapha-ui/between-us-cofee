@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Between Us">
+  <rect width="128" height="128" rx="30" fill="#002C25"/>
+  <g fill="none" stroke="#D5FF72" stroke-width="11" stroke-linejoin="round" stroke-linecap="butt">
+    <path d="M25 90 V38 H44 a13 13 0 0 1 0 26 H25 M25 64 H48 a13 13 0 0 1 0 26 H25"/>
+    <path d="M75 38 V74 a16 16 0 0 0 32 0 V38"/>
+  </g>
+</svg>

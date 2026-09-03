@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="512" height="512">
+  <!-- Masque du monogramme pour la scène 3D.
+       Tracé en BLANC volontairement : le matériau le teinte avec le token de
+       marque (`color`), ce qui garantit un lime strictement identique à celui du
+       reste du site, quelle que soit la rastérisation du SVG.
+       width/height explicites : THREE.TextureLoader rastérise le SVG à sa taille
+       intrinsèque, 128 px donneraient une texture floue. -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="11" stroke-linejoin="round">
+    <path d="M25 90 V38 H44 a13 13 0 0 1 0 26 H25 M25 64 H48 a13 13 0 0 1 0 26 H25"/>
+    <path d="M75 38 V74 a16 16 0 0 0 32 0 V38"/>
+  </g>
+</svg>
