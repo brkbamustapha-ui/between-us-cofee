@@ -126,7 +126,6 @@ cp .env.example .env.local
 | `ADMIN_USERNAME` | non | Nom d'utilisateur initial (défaut : `between us cofee`) |
 | `ADMIN_PASSWORD_HASH` | recommandé | Hash bcrypt du mot de passe initial |
 | `NEXT_PUBLIC_SUPABASE_URL` | production | URL du projet Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | production | Clé publique Supabase |
 | `SUPABASE_SERVICE_ROLE_KEY` | production | Clé `service_role` — **serveur uniquement** |
 | `SUPABASE_STORAGE_BUCKET` | non | Bucket des médias (défaut : `media`) |
 | `NEXT_PUBLIC_SITE_URL` | production | URL canonique (sitemap, Open Graph) |
