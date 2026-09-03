@@ -8,7 +8,7 @@ et les changements sont visibles **immédiatement** sur le site.
 
 ---
 
-## ⚠️ Trois points à traiter avant la mise en ligne
+## ⚠️ À traiter avant la mise en ligne
 
 ### 1. Le fichier source du logo n'est pas dans le dépôt
 
@@ -30,80 +30,40 @@ scène 3D, le footer et les partages sociaux basculent dessus, sans jamais défo
 fichier. La section « Couleurs » de la même page permet de corriger les deux teintes.
 Détails dans [`public/brand/README.md`](public/brand/README.md).
 
-### 2. La carte officielle n'a pas pu être lue
+### 2. Deux réserves sur la carte
 
-Le menu de référence (`vemenu.ve-solution.com`) est **bloqué par la politique réseau**
-de l'environnement de génération. Aucun plat, prix ou description n'a été inventé.
+La carte est en place : **9 catégories, 78 produits**, relevés sur les captures du
+menu officiel fournies par la maison. Noms, descriptions et prix sont repris tels
+qu'ils figurent dans l'application — rien n'a été inventé. Le menu en ligne
+(`vemenu.ve-solution.com`) reste bloqué par la politique réseau de l'environnement de
+génération : ces captures sont la seule source, et elles sont conservées dans
+[`photos/carte-source/`](photos/carte-source/).
 
-Les **neuf catégories sont en revanche les vraies**, communiquées par la maison et
-dans son ordre : Brunch, Hot Coffee, Cold Coffee, Hot Tea, Iced Tea, Frappuccino,
-Mocktails, Jus Naturels, Refreshers.
+Deux points restent à vérifier depuis `/admin/menu` :
 
-Seuls les **produits** manquent. Chaque catégorie contient deux espaces réservés
-marqués `isPlaceholder` : ils s'affichent avec un badge « À renseigner » sur le site
-public, un avertissement en tête de carte, et sont exclus des données structurées
-lues par Google.
+**Produits sans prix.** L'application n'en affiche aucun pour Espresso, Espresso
+Doppio, Café aromatisé, Fluffy, Sweet latte, Iced sweet latte, Iced tea, Mojito
+aromatisé et Magnolia. Le site indique « Prix sur place » ; saisissez le montant pour
+le remplacer.
 
-Chaque catégorie accepte aussi une **photo de section**, affichée en bandeau au-dessus
-de ses produits (`/admin/menu/categories` → champ Image). Toute photo téléversée est
-automatiquement harmonisée avec la palette du site (voile vert profond + reflet lime),
-et un aplat garantit la lisibilité du titre posé dessus, quelle que soit l'image.
+**Intitulés reconstitués.** L'application tronque les noms trop longs. Neuf produits
+ont été complétés d'après leur propre description : Frappuccino coffee caramel,
+Frappuccino café noisette, Frappuccino café White chocolat, Frappuccino crème
+pistache, Frappuccino crème caramel, Frappuccino crème chocolat, Frappuccino crème
+Coco, Toast fromage tomates, Oeufs au plat avec salade.
 
-**Trois façons de saisir la vraie carte** :
+À noter : l'application découpe les frappuccinos en trois sous-catégories et les
+refreshers en trois également. Le site les regroupe en une section chacun, comme
+demandé.
 
-**1. Coller la carte en texte** (le plus rapide, y compris depuis un téléphone) —
-`/admin/menu` → « Importer la carte officielle » → onglet **Texte**. Collez la carte
-telle que vous la copiez depuis une page en ligne, un PDF ou un message :
+Il manque encore les **photos** — plats, boissons, salle. Elles se téléversent depuis
+le dashboard : `/admin/menu` pour les produits, `/admin/menu/categories` pour les
+bandeaux de section, `/admin/gallery` pour la galerie. Toute photo ajoutée s'accorde
+automatiquement à la palette du site.
 
-```
-COFFEE
-Espresso ............ 150 DA
-Cappuccino — lait texturé   300
-Latte 350
+Pour mettre la carte à jour plus tard, le plus rapide reste `/admin/menu` →
+« Importer la carte officielle » → onglet **Texte** (format décrit plus bas).
 
-BRUNCH
-Brunch complet [best]  1 800 DA
-> Œufs, pain maison, jus pressé
-Pancakes 900
-```
-
-Les règles de lecture :
-
-| Écriture | Résultat |
-| --- | --- |
-| Ligne finissant par un prix | Un produit |
-| Ligne sans prix | Une catégorie (ouvre une section) |
-| Ligne commençant par `>` | Description du produit précédent |
-| `Nom — description 350` | Sépare aussi la description |
-| `[best]` `[nouveau]` `[populaire]` `[reco]` | Ajoute un badge |
-| `#` en début de ligne | Force la catégorie |
-
-Les montants sont reconnus avec ou sans devise, en `1 800`, `1.800`, `1,800` ou
-`900,00`. Un nombre nu inférieur à 20 n'est **pas** pris pour un prix (« Formule 2 »
-reste un intitulé). Un **aperçu affiche exactement ce qui sera créé** avant tout
-enregistrement, et signale les lignes non reprises.
-
-**2. Produit par produit** — `/admin/menu` → sélectionner une catégorie → modifier
-nom, description, prix, photo, badges → décocher « emplacement à renseigner ».
-
-**3. En JSON** (pour un import piloté depuis un autre outil) — même écran, onglet
-**JSON** :
-
-```json
-{
-  "replaceExisting": true,
-  "categories": [
-    {
-      "name": "Coffee",
-      "description": "Espresso, filtre et signatures lactées.",
-      "items": [
-        { "name": "Espresso", "description": "Simple, serré.", "price": 150 },
-        { "name": "Cappuccino", "price": 300, "badges": ["best_seller"] }
-      ]
-    }
-  ]
-}
-```
 
 ### 3. L'adresse postale exacte reste à saisir
 
@@ -299,7 +259,7 @@ src/
   types/content.ts            modèle de contenu
 supabase/schema.sql           schéma PostgreSQL + Storage + RLS
 public/brand/                 monogramme vectorisé + image de partage
-photos/                       dépôt de photos à partager
+photos/                       photos partagées + captures source de la carte
 ```
 
 ## Technologies
