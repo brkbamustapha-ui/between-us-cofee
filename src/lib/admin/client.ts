@@ -156,6 +156,20 @@ export async function uploadFile(
   });
 }
 
+/**
+ * Importe une image depuis une URL publique : c'est le serveur qui la
+ * télécharge, puis elle est stockée chez nous comme un téléversement normal.
+ */
+export function importFileFromUrl(
+  url: string,
+  folder: 'gallery' | 'videos' | 'menu' | 'content' | 'brand',
+): Promise<UploadResult & { source: string }> {
+  return request('/api/admin/media/import', {
+    method: 'POST',
+    json: { url, folder },
+  });
+}
+
 export function deleteFile(url: string): Promise<unknown> {
   return request('/api/admin/upload', { method: 'DELETE', json: { url } });
 }

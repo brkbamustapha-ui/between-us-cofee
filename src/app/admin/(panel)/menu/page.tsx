@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ListTree } from 'lucide-react';
+import { ImageIcon, ListTree } from 'lucide-react';
 
 import { PageHeader } from '@/components/admin/shell';
 import { getStore } from '@/lib/db';
@@ -21,13 +21,22 @@ export default async function MenuPage() {
         title="Menu"
         description="Produits, prix, photos et badges. Toute modification apparaît aussitôt sur le site."
         action={
-          <Link
-            href="/admin/menu/categories"
-            className="inline-flex h-10 items-center gap-2 rounded-xl border border-line-strong px-4 text-sm font-medium text-cream transition-colors hover:bg-white/5"
-          >
-            <ListTree className="h-4 w-4" />
-            Catégories
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/admin/menu/photos"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-line-strong px-4 text-sm font-medium text-cream transition-colors hover:bg-white/5"
+            >
+              <ImageIcon className="h-4 w-4" />
+              Photos
+            </Link>
+            <Link
+              href="/admin/menu/categories"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-line-strong px-4 text-sm font-medium text-cream transition-colors hover:bg-white/5"
+            >
+              <ListTree className="h-4 w-4" />
+              Catégories
+            </Link>
+          </div>
         }
       />
       <MenuManager categories={categories} items={items} />

@@ -1,10 +1,19 @@
 'use client';
 
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { FolderOpen, ImageIcon, Trash2, Upload, Video, X } from 'lucide-react';
+import {
+  FolderOpen,
+  ImageIcon,
+  Link2,
+  Trash2,
+  Upload,
+  Video,
+  X,
+} from 'lucide-react';
 
 import {
   deleteFile,
+  importFileFromUrl,
   listMediaLibrary,
   uploadFile,
   type LibraryEntry,
@@ -54,6 +63,7 @@ export function MediaPicker({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const toast = useToast();
 
   async function onPick(file: File | undefined) {
@@ -75,6 +85,31 @@ export function MediaPicker({
       // Réinitialise l'input : re-sélectionner le même fichier redéclenche bien
       // un changement.
       if (inputRef.current) inputRef.current.value = '';
+    }
+  }
+
+  /**
+   * Récupère une image hébergée ailleurs.
+   *
+   * Le téléchargement est fait par le serveur : le navigateur n'a pas le droit
+   * de lire une image d'un autre domaine, et une fois chez nous la photo ne
+   * dépend plus du site d'origine.
+   */
+  async function onImport(remoteUrl: string) {
+    setBusy(true);
+    try {
+      const result = await importFileFromUrl(remoteUrl, folder);
+      onChange(result.url);
+      setImportOpen(false);
+      toast.success(
+        `Image importée depuis ${result.source} (${Math.max(1, Math.round(result.bytes / 1024))} Ko).`,
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Import impossible.',
+      );
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -163,6 +198,13 @@ export function MediaPicker({
               Bibliothèque
             </AdminButton>
 
+            {accept === 'image' && (
+              <AdminButton type="button" onClick={() => setImportOpen(true)}>
+                <Link2 className="h-4 w-4" />
+                Depuis un lien
+              </AdminButton>
+            )}
+
             {value && (
               <AdminButton type="button" variant="danger" onClick={onRemove}>
                 <Trash2 className="h-4 w-4" />
@@ -202,6 +244,14 @@ export function MediaPicker({
             onChange(url);
             setLibraryOpen(false);
           }}
+        />
+      )}
+
+      {importOpen && (
+        <ImportFromUrlDialog
+          busy={busy}
+          onClose={() => setImportOpen(false)}
+          onSubmit={onImport}
         />
       )}
     </div>
@@ -348,6 +398,110 @@ function MediaLibraryDialog({
             </ul>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Import depuis un lien                                                      */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Saisie d'une adresse d'image distante.
+ *
+ * Le piège habituel est de coller l'adresse de la *page* qui affiche la photo
+ * plutôt que celle de la photo elle-même — d'où la marche à suivre rappelée
+ * ici. Le serveur renvoie de toute façon un message explicite quand le lien ne
+ * pointe pas sur une image.
+ */
+function ImportFromUrlDialog({
+  busy,
+  onClose,
+  onSubmit,
+}: {
+  busy: boolean;
+  onClose: () => void;
+  onSubmit: (url: string) => void;
+}) {
+  const [url, setUrl] = useState('');
+  const fieldRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    fieldRef.current?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[80] flex items-end justify-center bg-black/70 p-0 backdrop-blur-sm sm:items-center sm:p-6"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Importer une image depuis un lien"
+    >
+      <div className="w-full max-w-lg rounded-t-3xl border border-line bg-elevated p-5 sm:rounded-3xl sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 className="font-display text-base font-semibold text-cream">
+              Importer depuis un lien
+            </h2>
+            <p className="mt-1 text-xs leading-relaxed text-fg-subtle">
+              L’image est téléchargée puis hébergée ici : elle ne dépendra plus
+              du site d’origine.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Fermer"
+            className="rounded-lg p-1.5 text-fg-subtle transition-colors hover:text-cream"
+          >
+            <X className="h-4 w-4" aria-hidden="true" />
+          </button>
+        </div>
+
+        <form
+          className="mt-5"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const trimmed = url.trim();
+            if (trimmed) onSubmit(trimmed);
+          }}
+        >
+          <input
+            ref={fieldRef}
+            type="url"
+            required
+            value={url}
+            onChange={(event) => setUrl(event.target.value)}
+            placeholder="https://exemple.com/photo.jpg"
+            aria-label="Adresse de l’image"
+            className="h-11 w-full rounded-xl border border-line bg-ink px-3 text-sm text-cream transition-colors focus:border-lime focus:outline-none"
+          />
+
+          <ol className="mt-4 space-y-1.5 text-xs leading-relaxed text-fg-subtle">
+            <li>1. Ouvrez la photo en grand sur le site où vous l’avez trouvée.</li>
+            <li>
+              2. Clic droit sur la photo →{' '}
+              <strong className="text-fg-muted">Copier l’adresse de l’image</strong>.
+            </li>
+            <li>3. Collez-la ci-dessus. L’adresse doit finir par .jpg, .png ou .webp.</li>
+          </ol>
+
+          <div className="mt-5 flex justify-end gap-2">
+            <AdminButton type="button" onClick={onClose}>
+              Annuler
+            </AdminButton>
+            <AdminButton type="submit" variant="primary" loading={busy}>
+              <Link2 className="h-4 w-4" />
+              Importer
+            </AdminButton>
+          </div>
+        </form>
       </div>
     </div>
   );
