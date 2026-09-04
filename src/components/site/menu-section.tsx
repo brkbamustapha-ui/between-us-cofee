@@ -61,10 +61,18 @@ export function MenuSection({
   }, [items]);
 
   const activeItems = itemsByCategory.get(activeId) ?? [];
-  // Tant qu'aucun produit de la catégorie n'a de photo, les cartes passent en
-  // version typographique : 78 vignettes grises identiques donnaient au menu un
-  // air vide, alors qu'une carte de restaurant se lit très bien sans images.
-  const categoryHasPhotos = activeItems.some((item) => item.imageUrl);
+  // Deux mises en page, choisies par le taux de couverture photo de la
+  // catégorie :
+  //  - « card » : grandes cartes illustrées, dès que la plupart des produits ont
+  //    leur photo. En dessous, la grille se remplirait de cadres vides.
+  //  - « row »  : lignes typographiques, avec une vignette sur les seuls
+  //    produits photographiés. Aucun cadre vide, et les photos existantes
+  //    servent quand même.
+  const photographed = activeItems.filter((item) => item.imageUrl).length;
+  const layout: CardLayout =
+    photographed > 0 && photographed >= activeItems.length * 0.6
+      ? 'card'
+      : 'row';
   const activeCategory = visibleCategories.find(
     (category) => category.id === activeId,
   );
@@ -187,7 +195,7 @@ export function MenuSection({
                 key={item.id}
                 item={item}
                 index={index}
-                showImage={categoryHasPhotos}
+                layout={layout}
                 onOpen={() => setSelected(item)}
               />
             ))}
@@ -204,18 +212,22 @@ export function MenuSection({
 /*  Carte produit                                                              */
 /* -------------------------------------------------------------------------- */
 
+type CardLayout = 'card' | 'row';
+
 function MenuCard({
   item,
   index,
-  showImage,
+  layout,
   onOpen,
 }: {
   item: MenuItem;
   index: number;
-  /** Faux quand aucun produit de la catégorie n'a de photo. */
-  showImage: boolean;
+  layout: CardLayout;
   onOpen: () => void;
 }) {
+  const asCard = layout === 'card';
+  // En ligne, la vignette n'existe que si le produit a réellement une photo.
+  const thumb = !asCard && item.imageUrl;
   return (
     // Entrée en CSS plutôt qu'en JavaScript : une carte doit rester lisible même
     // si le script ne s'exécute pas. Le décalage est plafonné, le dernier
@@ -226,18 +238,30 @@ function MenuCard({
         { '--bu-card-delay': `${Math.min(index * 40, 240)}ms` } as CSSProperties
       }
     >
+      {/* `h-full` : dans une rangée mixte (produits photographiés ou non), une
+          carte à vignette est plus haute qu'une carte de texte seul. Sans cela,
+          les cartes basses laissaient un trou sous elles. */}
       <button
         type="button"
         onClick={onOpen}
         className={cn(
-          'group hairline flex w-full items-stretch overflow-hidden rounded-3xl border border-line bg-elevated/40 text-left transition-all duration-500 hover:border-lime/30 hover:bg-elevated/70',
-          showImage
-            ? 'gap-4 p-3 sm:flex-col sm:gap-0 sm:p-0'
-            : 'flex-col gap-0 p-5',
+          'group hairline flex h-full w-full items-stretch overflow-hidden rounded-3xl border border-line bg-elevated/40 text-left transition-all duration-500 hover:border-lime/30 hover:bg-elevated/70',
+          asCard && 'gap-4 p-3 sm:flex-col sm:gap-0 sm:p-0',
+          !asCard && thumb && 'gap-4 p-3',
+          !asCard && !thumb && 'flex-col gap-0 p-5',
         )}
       >
-        {showImage && (
-        <div className="photo-wash relative aspect-square w-24 shrink-0 overflow-hidden rounded-2xl bg-ink-deep sm:aspect-[4/3] sm:w-full sm:rounded-b-none sm:rounded-t-3xl">
+        {(asCard || thumb) && (
+        <div
+          className={cn(
+            'relative aspect-square shrink-0 overflow-hidden rounded-2xl bg-ink-deep',
+            // Le voile de marque n'a de sens qu'en grand format : sur une
+            // vignette de 96 px il ne fait qu'assombrir la photo.
+            asCard
+              ? 'photo-wash w-24 sm:aspect-[4/3] sm:w-full sm:rounded-b-none sm:rounded-t-3xl'
+              : 'w-24 sm:w-28',
+          )}
+        >
           {item.imageUrl ? (
             <Image
               src={item.imageUrl}
@@ -245,7 +269,11 @@ function MenuCard({
               fill
               // Trois tailles réelles : mobile en vignette, tablette et desktop
               // en carte pleine largeur de colonne.
-              sizes="(max-width: 640px) 96px, (max-width: 1280px) 50vw, 33vw"
+              sizes={
+                asCard
+                  ? '(max-width: 640px) 96px, (max-width: 1280px) 50vw, 33vw'
+                  : '112px'
+              }
               loading="lazy"
               className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]"
             />
@@ -271,7 +299,7 @@ function MenuCard({
         <div
           className={cn(
             'flex min-w-0 flex-1 flex-col justify-center',
-            showImage && 'sm:p-5',
+            asCard && 'sm:p-5',
           )}
         >
           <div className="flex items-start justify-between gap-3">
@@ -294,7 +322,7 @@ function MenuCard({
             {/* Avec photo, les badges sont posés dessus dès `sm` et n'ont pas à
                 être répétés ici. Sans photo, il n'y a pas d'autre endroit où
                 les afficher : ils restent visibles à toutes les tailles. */}
-            <span className={cn('flex gap-1.5', showImage && 'sm:hidden')}>
+            <span className={cn('flex gap-1.5', asCard && 'sm:hidden')}>
               {item.badges.map((badge) => (
                 <MenuBadgePill key={badge} badge={badge} />
               ))}

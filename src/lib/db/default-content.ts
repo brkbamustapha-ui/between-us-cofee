@@ -30,7 +30,14 @@ const MENU: {
   description: string;
   /** Bandeau de section, affiché au-dessus des produits. */
   imageUrl?: string;
-  items: [name: string, description: string, price: number | null, badges: MenuBadge[]][];
+  items: [
+    name: string,
+    description: string,
+    price: number | null,
+    badges: MenuBadge[],
+    /** Photo du produit, découpée dans les clichés de la maison. */
+    image?: string,
+  ][];
 }[] = [
   {
     id: 'cat-brunch',
@@ -40,15 +47,15 @@ const MENU: {
     description: 'Assiettes salées et sucrées, du matin au début d’après-midi.',
     items: [
       ['Pappus', 'Omelette, bacon, peperoni, poulet fumé artisanale, salade', 1300, []],
-      ['Bioday', 'Bole granola, jus detox', 1000, []],
-      ['Toast avocat saumon', '', 850, []],
+      ['Bioday', 'Bole granola, jus detox', 1000, [], 'bol-granola'],
+      ['Toast avocat saumon', '', 850, [], 'toast-saumon'],
       ['Toast fromage tomates', '', 450, []],
-      ['Oeufs au plat avec salade', '', 350, []],
+      ['Oeufs au plat avec salade', '', 350, [], 'oeuf-au-plat'],
       ['Croissant salé', '3 types de charcuterie artisanale au choix', 750, []],
       ['Bloom', 'Croissant salé, oeufs omelette, fromage, bacon, viande ou poulet', 1500, []],
       ['Sunflower', 'Toast, purée d’avocat, saumon, oeufs', 1700, []],
       ['Matina', 'Boisson chaude, boisson froide, mignardises, viennoiseries', 1500, []],
-      ['Magnolia', 'Toast, fromage, champignons frais, tomates cerises', null, []],
+      ['Magnolia', 'Toast, fromage, champignons frais, tomates cerises', null, [], 'toast-champignons'],
     ],
   },
   {
@@ -61,8 +68,8 @@ const MENU: {
       ['Espresso Doppio', 'Double shot espresso', null, []],
       ['Espresso macchiato', 'One shot espresso + mousse de lait', 350, []],
       ['Americano', 'One shot espresso + eau chaude', 400, []],
-      ['Latte', 'Double shot espresso + lait', 350, []],
-      ['Cappuccino', 'Double shot espresso + lait + mousse de lait + cacao', 400, []],
+      ['Latte', 'Double shot espresso + lait', 350, [], 'latte'],
+      ['Cappuccino', 'Double shot espresso + lait + mousse de lait + cacao', 400, [], 'cappuccino'],
       ['Spanish latte', 'Lait concentré + espresso + lait', 450, []],
       ['Caramel macchiato', 'Sirop vanille + espresso + lait + caramel', 450, []],
       ['Café aromatisé', 'Espresso + sirop au choix', null, []],
@@ -70,7 +77,7 @@ const MENU: {
       ['Dalgona coffee', 'Lait + mousse de café', 450, []],
       ['Mocha', 'Espresso + lait + nutella + chantilly', 500, []],
       ['White mocha', 'Espresso, chocolat blanc, lait, chantilly', 500, []],
-      ['Milk chocolate', 'Lait + nesquik + sirop chocolat', 350, []],
+      ['Milk chocolate', 'Lait + nesquik + sirop chocolat', 350, [], 'chocolat-chaud'],
       ['White hot chocolat', 'Lait + chocolat blanc + sirop chocolat blanc', 450, []],
       ['Biscoff latte', 'Lait + crème biscoff + chantilly', 450, []],
       ['Fluffy', 'Lait + crème au choix + mousse de café', null, []],
@@ -376,13 +383,13 @@ export const defaultContent: SiteContent = {
   })),
 
   items: MENU.flatMap((category) =>
-    category.items.map(([name, description, price, badges], index) => ({
+    category.items.map(([name, description, price, badges, image], index) => ({
       id: `${category.id}-${index + 1}`,
       categoryId: category.id,
       name,
       description,
       price,
-      imageUrl: '',
+      imageUrl: image ? `/photos/menu/${image}.webp` : '',
       badges,
       position: index + 1,
       enabled: true,
