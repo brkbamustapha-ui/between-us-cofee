@@ -3,34 +3,45 @@ import { Quote } from 'lucide-react';
 
 import { Reveal } from '@/components/ui/reveal';
 import { SectionHeading } from '@/components/ui/section-heading';
+import { cn } from '@/lib/utils';
 import type { AboutContent } from '@/types/content';
 
-/** Section « À propos » : le récit du lieu, ses chiffres, ses images. */
+/**
+ * Section « À propos » : le récit du lieu, ses chiffres, ses images.
+ *
+ * Sans photo, la colonne image n'est pas rendue du tout et le texte passe sur
+ * une seule colonne. Réserver la moitié d'un écran large pour un cadre vide
+ * donnait au site un air inachevé — c'est le contenu qui décide de la mise en
+ * page, pas l'inverse.
+ */
 export function About({ about }: { about: AboutContent }) {
   const paragraphs = about.paragraphs.filter((text) => text.trim());
   const stats = about.stats.filter((stat) => stat.value || stat.label);
+  const hasImage = Boolean(about.imageUrl);
 
   return (
     <section id="a-propos" className="section-y relative scroll-mt-20">
       <div className="container-x">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-16">
+        <div
+          className={cn(
+            'grid gap-12',
+            hasImage && 'lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-16',
+          )}
+        >
           {/* Images — d'abord dans le DOM sur desktop uniquement, pour que le
               texte reste en tête de lecture sur mobile. */}
+          {hasImage && (
           <Reveal className="order-2 lg:order-1">
             <div className="relative">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-elevated/40">
-                {about.imageUrl ? (
-                  <Image
-                    src={about.imageUrl}
-                    alt=""
-                    fill
-                    sizes="(max-width: 1024px) 100vw, 45vw"
-                    loading="lazy"
-                    className="object-cover"
-                  />
-                ) : (
-                  <PlaceholderPanel label="Photo du lieu" />
-                )}
+              <div className="photo-wash relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-line bg-elevated/40">
+                <Image
+                  src={about.imageUrl}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                  loading="lazy"
+                  className="object-cover"
+                />
               </div>
 
               {about.secondaryImageUrl && (
@@ -52,8 +63,9 @@ export function About({ about }: { about: AboutContent }) {
               />
             </div>
           </Reveal>
+          )}
 
-          <div className="order-1 lg:order-2">
+          <div className={cn('order-1 lg:order-2', !hasImage && 'max-w-3xl')}>
             <SectionHeading
               eyebrow={about.eyebrow}
               title={about.title}
@@ -106,13 +118,3 @@ export function About({ about }: { about: AboutContent }) {
 }
 
 /** Aplat de remplacement quand aucune photo n'a encore été téléversée. */
-export function PlaceholderPanel({ label }: { label: string }) {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-elevated to-ink-deep px-6 text-center">
-      <span className="font-serif text-sm italic text-lime/40">Between Us</span>
-      <span className="text-[0.6875rem] uppercase tracking-[0.16em] text-fg-subtle">
-        {label}
-      </span>
-    </div>
-  );
-}

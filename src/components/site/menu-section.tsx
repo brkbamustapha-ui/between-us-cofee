@@ -61,6 +61,10 @@ export function MenuSection({
   }, [items]);
 
   const activeItems = itemsByCategory.get(activeId) ?? [];
+  // Tant qu'aucun produit de la catégorie n'a de photo, les cartes passent en
+  // version typographique : 78 vignettes grises identiques donnaient au menu un
+  // air vide, alors qu'une carte de restaurant se lit très bien sans images.
+  const categoryHasPhotos = activeItems.some((item) => item.imageUrl);
   const activeCategory = visibleCategories.find(
     (category) => category.id === activeId,
   );
@@ -183,6 +187,7 @@ export function MenuSection({
                 key={item.id}
                 item={item}
                 index={index}
+                showImage={categoryHasPhotos}
                 onOpen={() => setSelected(item)}
               />
             ))}
@@ -202,10 +207,13 @@ export function MenuSection({
 function MenuCard({
   item,
   index,
+  showImage,
   onOpen,
 }: {
   item: MenuItem;
   index: number;
+  /** Faux quand aucun produit de la catégorie n'a de photo. */
+  showImage: boolean;
   onOpen: () => void;
 }) {
   const reduced = useReducedMotion();
@@ -225,8 +233,14 @@ function MenuCard({
       <button
         type="button"
         onClick={onOpen}
-        className="group hairline flex w-full items-stretch gap-4 overflow-hidden rounded-3xl border border-line bg-elevated/40 p-3 text-left transition-all duration-500 hover:border-lime/30 hover:bg-elevated/70 sm:flex-col sm:gap-0 sm:p-0"
+        className={cn(
+          'group hairline flex w-full items-stretch overflow-hidden rounded-3xl border border-line bg-elevated/40 text-left transition-all duration-500 hover:border-lime/30 hover:bg-elevated/70',
+          showImage
+            ? 'gap-4 p-3 sm:flex-col sm:gap-0 sm:p-0'
+            : 'flex-col gap-0 p-5',
+        )}
       >
+        {showImage && (
         <div className="photo-wash relative aspect-square w-24 shrink-0 overflow-hidden rounded-2xl bg-ink-deep sm:aspect-[4/3] sm:w-full sm:rounded-b-none sm:rounded-t-3xl">
           {item.imageUrl ? (
             <Image
@@ -256,8 +270,14 @@ function MenuCard({
             </div>
           )}
         </div>
+        )}
 
-        <div className="flex min-w-0 flex-1 flex-col justify-center sm:p-5">
+        <div
+          className={cn(
+            'flex min-w-0 flex-1 flex-col justify-center',
+            showImage && 'sm:p-5',
+          )}
+        >
           <div className="flex items-start justify-between gap-3">
             <h3 className="font-display text-base font-semibold leading-snug text-cream transition-colors duration-300 group-hover:text-lime sm:text-lg">
               {item.name}
@@ -275,7 +295,10 @@ function MenuCard({
 
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {item.isPlaceholder && <PlaceholderPill />}
-            <span className="flex gap-1.5 sm:hidden">
+            {/* Avec photo, les badges sont posés dessus dès `sm` et n'ont pas à
+                être répétés ici. Sans photo, il n'y a pas d'autre endroit où
+                les afficher : ils restent visibles à toutes les tailles. */}
+            <span className={cn('flex gap-1.5', showImage && 'sm:hidden')}>
               {item.badges.map((badge) => (
                 <MenuBadgePill key={badge} badge={badge} />
               ))}

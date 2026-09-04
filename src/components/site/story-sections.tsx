@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 
-import { PlaceholderPanel } from './about';
 import { Reveal } from '@/components/ui/reveal';
 import { cn } from '@/lib/utils';
 import type { ContentSection } from '@/types/content';
@@ -42,6 +41,7 @@ function StoryBlock({
   tinted: boolean;
 }) {
   const imageFirst = section.layout === 'left';
+  const hasImage = Boolean(section.imageUrl);
 
   return (
     <section
@@ -52,12 +52,15 @@ function StoryBlock({
       )}
     >
       <div className="container-x">
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal
-            className={cn(imageFirst ? 'lg:order-1' : 'lg:order-2')}
-          >
-            <div className="relative aspect-[5/4] overflow-hidden rounded-[2rem] border border-line bg-elevated/40 sm:aspect-[16/11]">
-              {section.imageUrl ? (
+        <div
+          className={cn(
+            'grid items-center gap-10',
+            hasImage && 'lg:grid-cols-2 lg:gap-16',
+          )}
+        >
+          {hasImage && (
+            <Reveal className={cn(imageFirst ? 'lg:order-1' : 'lg:order-2')}>
+              <div className="photo-wash relative aspect-[5/4] overflow-hidden rounded-[2rem] border border-line bg-elevated/40 sm:aspect-[16/11]">
                 <Image
                   src={section.imageUrl}
                   alt=""
@@ -66,13 +69,19 @@ function StoryBlock({
                   loading="lazy"
                   className="object-cover"
                 />
-              ) : (
-                <PlaceholderPanel label={section.eyebrow || section.title} />
-              )}
-            </div>
-          </Reveal>
+              </div>
+            </Reveal>
+          )}
 
-          <div className={cn(imageFirst ? 'lg:order-2' : 'lg:order-1')}>
+          <div
+            className={cn(
+              hasImage
+                ? imageFirst
+                  ? 'lg:order-2'
+                  : 'lg:order-1'
+                : 'max-w-3xl',
+            )}
+          >
             {section.eyebrow && (
               <Reveal>
                 <p className="mb-4 flex items-center gap-3 font-serif text-sm italic text-lime">
