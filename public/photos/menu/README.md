@@ -27,10 +27,19 @@ montrer au client autre chose que ce qu'il commande.
 
 ## Ajouter une photo à un produit
 
-1. Dépose le fichier ici (voir `photos/README.md` pour la marche à suivre
-   depuis le navigateur ou le téléphone). Formats : `.webp`, `.jpg`, `.png`.
-2. Ouvre le dashboard → **Menu** → le produit → champ image : le fichier
-   apparaît dans la médiathèque, il suffit de le sélectionner.
+Le plus rapide : dashboard → **Photos de la carte**. L'écran ne liste que les
+produits sans photo et propose pour chacun un lien de recherche déjà rempli.
+
+- **Une photo trouvée en ligne** : ouvre-la en grand, clic droit →
+  « Copier l'adresse de l'image », colle l'adresse, **Importer**. Le serveur la
+  télécharge et l'héberge ici ; elle ne dépendra plus du site d'origine.
+  Attention : il faut l'adresse de l'**image** (elle finit par `.jpg`, `.png`
+  ou `.webp`), pas celle de la page qui l'affiche.
+- **Une photo à toi** : bouton **Téléverser**, directement depuis le téléphone
+  ou l'ordinateur. C'est toujours la meilleure option — c'est le produit
+  réellement servi.
+- **Un fichier déposé dans ce dossier** via GitHub (voir `photos/README.md`)
+  apparaît aussi dans la médiathèque du sélecteur de média.
 
 Le format idéal est **carré, 700 × 700 px minimum**, le produit bien au centre :
 la vignette est rognée en carré.
