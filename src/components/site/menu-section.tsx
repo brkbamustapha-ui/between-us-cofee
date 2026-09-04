@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import Image from 'next/image';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { AlertTriangle, Coffee, X } from 'lucide-react';
@@ -216,19 +216,15 @@ function MenuCard({
   showImage: boolean;
   onOpen: () => void;
 }) {
-  const reduced = useReducedMotion();
-
   return (
-    <motion.li
-      initial={reduced ? false : { opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.45,
-        // Le décalage est plafonné : le dernier produit d'une longue liste
-        // n'attend jamais plus de 240 ms.
-        delay: reduced ? 0 : Math.min(index * 0.04, 0.24),
-        ease: [0.22, 1, 0.36, 1],
-      }}
+    // Entrée en CSS plutôt qu'en JavaScript : une carte doit rester lisible même
+    // si le script ne s'exécute pas. Le décalage est plafonné, le dernier
+    // produit d'une longue liste n'attend jamais plus de 240 ms.
+    <li
+      className="bu-card-in"
+      style={
+        { '--bu-card-delay': `${Math.min(index * 40, 240)}ms` } as CSSProperties
+      }
     >
       <button
         type="button"
@@ -306,7 +302,7 @@ function MenuCard({
           </div>
         </div>
       </button>
-    </motion.li>
+    </li>
   );
 }
 

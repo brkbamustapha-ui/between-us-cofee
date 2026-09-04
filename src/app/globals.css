@@ -322,6 +322,68 @@
   animation: bu-shimmer 1.6s linear infinite;
 }
 
+/* ==========================================================================
+   Apparition au défilement — sans JavaScript
+   --------------------------------------------------------------------------
+   Le contenu est VISIBLE PAR DÉFAUT. L'animation n'est qu'un supplément, posée
+   par une timeline de défilement CSS : aucun observateur, aucun script.
+
+   La version précédente s'appuyait sur `whileInView` (IntersectionObserver) et
+   rendait donc le contenu à `opacity: 0` côté serveur. Dès que l'observateur ne
+   notifiait pas — navigateur ancien, script bloqué, hydratation en échec — la
+   page entière restait blanche, sauf le menu qui n'en dépendait pas. Un site
+   vitrine ne doit jamais faire dépendre la lisibilité de son contenu de JS.
+   ========================================================================== */
+
+@keyframes bu-reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--bu-reveal-y, 22px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.bu-reveal {
+  /* Rien ici : l'état par défaut est « visible ». */
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Là où les timelines de défilement n'existent pas (Safari, Firefox à ce
+     jour), le contenu s'affiche simplement sans animation — c'est le bon
+     repli. */
+  @supports (animation-timeline: view()) {
+    .bu-reveal {
+      animation: bu-reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry var(--bu-reveal-from, 0%) cover 32%;
+    }
+  }
+}
+
+/* Entrée des cartes du menu. Animation de durée (et non de défilement) : elle
+   se rejoue à chaque changement de catégorie, ce qui est l'effet recherché.
+   En CSS pur, elle aboutit même sans JavaScript — la carte reste lisible. */
+@keyframes bu-card-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bu-card-in {
+    animation: bu-card-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--bu-card-delay, 0ms);
+  }
+}
+
 /* Respecte impérativement le réglage système. */
 @media (prefers-reduced-motion: reduce) {
   html {
