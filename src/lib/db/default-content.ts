@@ -28,12 +28,15 @@ const MENU: {
   name: string;
   slug: string;
   description: string;
+  /** Bandeau de section, affiché au-dessus des produits. */
+  imageUrl?: string;
   items: [name: string, description: string, price: number | null, badges: MenuBadge[]][];
 }[] = [
   {
     id: 'cat-brunch',
     name: 'Brunch',
     slug: 'brunch',
+    imageUrl: '/photos/brunch-toasts.webp',
     description: 'Assiettes salées et sucrées, du matin au début d’après-midi.',
     items: [
       ['Pappus', 'Omelette, bacon, peperoni, poulet fumé artisanale, salade', 1300, []],
@@ -225,7 +228,7 @@ export const defaultContent: SiteContent = {
       'Nous travaillons le café comme un produit vivant — mouture réglée chaque jour, extraction contrôlée, lait texturé à la commande — et nous dressons les assiettes de brunch avec la même exigence.',
       'Ce texte est modifiable depuis le dashboard : racontez l’histoire du lieu avec vos mots.',
     ],
-    imageUrl: '',
+    imageUrl: '/photos/enseigne-nuit.webp',
     secondaryImageUrl: '',
     videoUrl: '',
     stats: [
@@ -301,7 +304,7 @@ export const defaultContent: SiteContent = {
       eyebrow: 'Notre univers',
       title: 'Le vert profond, la lumière rase, et le bruit d’une machine',
       body: 'Un comptoir en pièce maîtresse, des matières mates, une palette qui descend du vert profond au lime. L’espace a été dessiné pour deux usages : le café rapide du matin, et les longues tablées du week-end.',
-      imageUrl: '',
+      imageUrl: '/photos/refreshers.webp',
       highlights: [
         'Salle intérieure et terrasse',
         'Wi-Fi et prises à chaque table',
@@ -317,7 +320,7 @@ export const defaultContent: SiteContent = {
       eyebrow: 'Coffee',
       title: 'Le café, travaillé comme il le mérite',
       body: 'Grains sélectionnés, mouture ajustée plusieurs fois par jour, extraction chronométrée. Espresso serré, filtre allongé, ou signature lactée : chaque tasse sort du comptoir réglée.',
-      imageUrl: '',
+      imageUrl: '/photos/boissons-chaudes.webp',
       highlights: [
         'Espresso & filtre',
         'Lait texturé à la commande',
@@ -333,7 +336,7 @@ export const defaultContent: SiteContent = {
       eyebrow: 'Brunch',
       title: 'Le brunch, du matin au début d’après-midi',
       body: 'Des assiettes généreuses, sucrées ou salées, préparées à la commande. Le service brunch s’étire assez tard pour que personne n’ait à se presser.',
-      imageUrl: '',
+      imageUrl: '/photos/brunch-assiettes.webp',
       highlights: [
         'Sucré et salé',
         'Formules à composer',
@@ -349,7 +352,7 @@ export const defaultContent: SiteContent = {
       eyebrow: 'Expérience Between Us',
       title: 'Ce qui se passe entre nous reste entre nous',
       body: 'Une playlist tenue, un service qui connaît les habitués, et une salle qui change de lumière au fil de la journée. Between Us est autant un lieu qu’un moment.',
-      imageUrl: '',
+      imageUrl: '/photos/patisseries.webp',
       highlights: [
         'Ambiance musicale soignée',
         'Privatisation possible',
@@ -366,9 +369,8 @@ export const defaultContent: SiteContent = {
     name: category.name,
     slug: category.slug,
     description: category.description,
-    // Photo de section : à téléverser depuis /admin/menu/categories. Tant
-    // qu'elle est vide, la section affiche simplement son texte.
-    imageUrl: '',
+    // Bandeau de section ; sans photo, la section affiche simplement son texte.
+    imageUrl: category.imageUrl ?? '',
     position: index + 1,
     enabled: true,
   })),
@@ -391,7 +393,21 @@ export const defaultContent: SiteContent = {
   // Photos et vidéos sont ajoutées depuis le dashboard : les sections
   // correspondantes se masquent automatiquement tant qu'elles sont vides,
   // ce qui évite toute image cassée sur le site public.
-  gallery: [],
+  gallery: [
+    ['enseigne-nuit', 'L’enseigne Between Us allumée à la tombée du soir'],
+    ['brunch-assiettes', 'Assiettes de brunch : bowl granola, œufs et planche salée'],
+    ['boissons-chaudes', 'Cappuccino, chocolat chaud et latte'],
+    ['brunch-toasts', 'Toasts au saumon, aux champignons et œuf au plat'],
+    ['patisseries', 'Planches de gâteaux du jour'],
+    ['refreshers', 'Refreshers glacés sous la lumière du bar'],
+  ].map(([slug, alt], index) => ({
+    id: `gal-${slug}`,
+    url: `/photos/${slug}.webp`,
+    alt,
+    caption: '',
+    position: index + 1,
+    enabled: true,
+  })),
   videos: [],
 
   // Comptes officiels communiqués par la maison. Les paramètres de suivi des

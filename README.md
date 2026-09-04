@@ -56,10 +56,15 @@ Coco, Toast fromage tomates, Oeufs au plat avec salade.
 refreshers en trois également. Le site les regroupe en une section chacun, comme
 demandé.
 
-Il manque encore les **photos** — plats, boissons, salle. Elles se téléversent depuis
-le dashboard : `/admin/menu` pour les produits, `/admin/menu/categories` pour les
-bandeaux de section, `/admin/gallery` pour la galerie. Toute photo ajoutée s'accorde
-automatiquement à la palette du site.
+Six photos de la maison sont en place (`public/photos/`) : l'enseigne de nuit sur
+« À propos », les boissons chaudes sur la section Coffee, les assiettes sur Brunch,
+les pâtisseries sur Expérience, les refreshers sur Notre univers, et un bandeau sur
+la catégorie Brunch de la carte. Les six alimentent aussi la galerie.
+
+Il manque encore les **photos des produits** : `/admin/menu` → chaque produit. Tant
+qu'une catégorie n'en a aucune, ses cartes s'affichent en version typographique —
+c'est volontaire, une vignette vide répétée fait plus vide qu'un texte bien posé.
+Toute photo ajoutée s'accorde automatiquement à la palette du site.
 
 Pour mettre la carte à jour plus tard, le plus rapide reste `/admin/menu` →
 « Importer la carte officielle » → onglet **Texte** (format décrit plus bas).
