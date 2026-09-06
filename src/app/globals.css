@@ -23,7 +23,11 @@
 
   /* — Texte (contrastes vérifiés sur --color-ink : 13,6 / 12,3 / 7,1 / 5,1) — */
   --color-fg: #f2f5e9;
-  --color-fg-muted: #9db8a6;
+  /* Éclairci d'un cran (#9db8a6 → #a6bfae) : le décor photo passe désormais
+     derrière le texte courant, et sur la zone la plus claire d'un cliché ce
+     gris-vert tombait à 4,40:1. Le remonter coûte moins au regard que
+     d'assombrir la salle que l'on cherchait justement à rendre visible. */
+  --color-fg-muted: #a6bfae;
   --color-fg-subtle: #7e9e89;
   --color-on-lime: #0a2b1e;
 
@@ -483,10 +487,19 @@
   transform: translateZ(-160px) rotateY(-7deg);
 }
 
-.bu-room-panel[data-depth='0'] { opacity: 0.85; }
-.bu-room-panel[data-depth='1'] { opacity: 0.9; }
-.bu-room-panel[data-depth='2'] { opacity: 0.7; }
-.bu-room-panel[data-depth='3'] { opacity: 0.5; }
+/* Deux calques par cadre, dont un seul porte `data-on`. Au changement de
+   section, le décor entrant est écrit dans le calque masqué puis on échange :
+   le navigateur fait le fondu, et l'ancienne photo reste affichée pendant que
+   la nouvelle se charge — jamais de trou. */
+.bu-room-panel {
+  opacity: 0;
+  transition: opacity 900ms ease;
+}
+
+.bu-room-panel[data-on][data-depth='0'] { opacity: 0.85; }
+.bu-room-panel[data-on][data-depth='1'] { opacity: 0.9; }
+.bu-room-panel[data-on][data-depth='2'] { opacity: 0.7; }
+.bu-room-panel[data-on][data-depth='3'] { opacity: 0.5; }
 
 /* Dérive lente et continue : c'est elle qui donne la vie sur téléphone, où il
    n'y a pas de curseur à suivre. Chaque panneau a sa propre durée, les phases
