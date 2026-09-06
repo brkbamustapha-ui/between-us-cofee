@@ -17,7 +17,7 @@ Il était d'abord appliqué par le navigateur (`filter` + `mask-image`), ce qui 
 lui faisait recalculer sur quatre calques plein écran à chaque image affichée.
 Le faire une fois à la préparation ne coûte plus rien ensuite.
 
-Treize panneaux, 421 Ko en tout — mais seulement quatre chargés à la fois, ceux
+Treize panneaux, 545 Ko en tout — mais seulement quatre chargés à la fois, ceux
 de la scène affichée.
 
 ### Les scènes
@@ -53,20 +53,28 @@ const NAMES = ['salle-alcoves','salle-profondeur','salle-medaillon','salle-banqu
   const { width, height } = r.info;
   const mask = Buffer.from('<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"' + width + '\" height=\"' + height + '\">' +
     '<defs><radialGradient id=\"g\" cx=\"50%\" cy=\"50%\" r=\"50%\">' +
-    '<stop offset=\"40%\" stop-color=\"#fff\" stop-opacity=\"1\"/>' +
-    '<stop offset=\"78%\" stop-color=\"#fff\" stop-opacity=\"0\"/>' +
+    '<stop offset=\"55%\" stop-color=\"#fff\" stop-opacity=\"1\"/>' +
+    '<stop offset=\"88%\" stop-color=\"#fff\" stop-opacity=\"0\"/>' +
     '</radialGradient></defs><rect width=\"' + width + '\" height=\"' + height + '\" fill=\"url(#g)\"/></svg>');
-  await sharp(r.data).modulate({ saturation: 0.5, brightness: 0.78 }).linear(1.03, -3)
+  await sharp(r.data).modulate({ saturation: 0.58, brightness: 0.95 }).linear(1.03, -3)
     .ensureAlpha().composite([{ input: mask, blend: 'dest-in' }])
     .webp({ quality: 70, alphaQuality: 78 }).toFile('public/photos/room/' + name + '.webp');
 } })();
 "
 ```
 
-⚠️ En changeant `brightness`, vérifie le contraste du texte : le décor passe
-derrière toute la page. La mesure est décrite dans le message du commit qui a
-introduit les scènes — deux captures, l'une avec le texte transparent, puis
-comparaison sous chaque glyphe.
+⚠️ En changeant `brightness` ou le masque, vérifie le contraste du texte : le
+décor passe derrière toute la page, et c'est le corps de texte
+(`--color-fg-muted`) qui plafonne — pas les titres, qui ont dix fois la marge
+nécessaire. Trois réglages se répondent :
+
+1. la luminosité cuite dans les panneaux ;
+2. le voile global (`bg-ink/…` dans `ambient-room.tsx`) ;
+3. le halo local sous les colonnes de texte (`story-sections.tsx`), qui permet
+   de garder le reste de la page lumineux sans sacrifier la lecture.
+
+La mesure : deux captures du même écran, l'une avec le texte rendu transparent,
+puis comparaison de la couleur du texte au fond exact sous chaque glyphe.
 
 ## Les autres fichiers
 

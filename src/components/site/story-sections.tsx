@@ -75,6 +75,7 @@ function StoryBlock({
 
           <div
             className={cn(
+              'relative',
               hasImage
                 ? imageFirst
                   ? 'lg:order-2'
@@ -82,6 +83,20 @@ function StoryBlock({
                 : 'max-w-3xl',
             )}
           >
+            {/* Halo sombre sous la colonne de texte.
+                C'est ici que de longues phrases tombent sur le décor photo du
+                site, et le point le plus clair d'un cliché y faisait descendre
+                le corps de texte à 3,4:1. Un aplat flouté n'a pas de bord
+                visible — on ne voit pas un cadre, seulement le fond qui
+                s'assombrit là où il faut lire — et il évite de rabaisser le
+                décor sur toute la page pour un seul bloc.
+                Le débord latéral s'arrête à la marge du conteneur (20 px) :
+                au-delà, il élargissait la page sur un écran de téléphone. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-x-5 -inset-y-10 -z-10 rounded-[3rem] bg-ink/70 blur-2xl sm:-inset-x-8"
+            />
+
             {section.eyebrow && (
               <Reveal>
                 <p className="mb-4 flex items-center gap-3 font-serif text-sm italic text-lime">

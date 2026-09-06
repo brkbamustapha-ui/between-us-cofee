@@ -23,11 +23,13 @@
 
   /* — Texte (contrastes vérifiés sur --color-ink : 13,6 / 12,3 / 7,1 / 5,1) — */
   --color-fg: #f2f5e9;
-  /* Éclairci d'un cran (#9db8a6 → #a6bfae) : le décor photo passe désormais
-     derrière le texte courant, et sur la zone la plus claire d'un cliché ce
-     gris-vert tombait à 4,40:1. Le remonter coûte moins au regard que
-     d'assombrir la salle que l'on cherchait justement à rendre visible. */
-  --color-fg-muted: #a6bfae;
+  /* Éclairci deux fois (#9db8a6 → #a6bfae → #b8cdbf) : le décor photo passe
+     derrière le texte courant, et c'est cette couleur-là qui plafonne sa
+     luminosité — le crème des titres a treize fois le contraste nécessaire, le
+     gris-vert du corps de texte à peine le minimum. Chaque cran gagné ici
+     autorise un fond nettement plus visible, ce qui coûte moins au regard que
+     d'assombrir la salle qu'on cherche justement à montrer. */
+  --color-fg-muted: #b8cdbf;
   --color-fg-subtle: #7e9e89;
   --color-on-lime: #0a2b1e;
 

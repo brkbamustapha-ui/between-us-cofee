@@ -141,8 +141,8 @@ export function AmbientRoom() {
           fait à l'œil : il est descendu jusqu'au point où la salle se voit
           nettement, puis vérifié en mesurant le contraste réel sous chaque
           glyphe de la page. */}
-      <div className="absolute inset-0 bg-ink/52" />
-      <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/28 to-ink" />
+      <div className="absolute inset-0 bg-ink/42" />
+      <div className="absolute inset-0 bg-gradient-to-b from-ink via-ink/18 to-ink" />
       {/* Les clichés sont chauds et beiges ; désaturés, ils tiraient vers
           l'olive. Ce lavis les ramène dans le vert de la marque. */}
       <div className="absolute inset-0 bg-lime/[0.05] mix-blend-overlay" />
