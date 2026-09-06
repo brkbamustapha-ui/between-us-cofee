@@ -1,56 +1,24 @@
 # Photos de produits
 
-Une image par produit de la carte. Le fichier porte le nom utilisé dans
-`imageUrl` : `/photos/menu/<nom>.webp`.
+Dossier de destination pour une photo attachée à **un produit précis** de la
+carte, via dashboard → **Photos de la carte**.
 
-## D'où viennent les photos actuelles
+## Il est vide, et c'est voulu
 
-Toutes sont des **recadrages des clichés de la maison** déjà présents dans
-`public/photos/`. Aucune image n'a été prise ailleurs : pas de photo trouvée
-sur internet (droits d'auteur, et le plat photographié ne serait pas celui
-servi ici), pas d'image générée.
+La carte n'affiche aujourd'hui **aucune vignette par produit**. Les photos de la
+maison sont posées en tête de menu (la vitrine), là où elles montrent l'allure
+de ce qu'on sert sans prétendre être le produit exact : sur un cliché de trois
+boissons, rien ne dit laquelle est le « Cappuccino » de la carte.
 
-| Fichier | Produit | Cliché d'origine |
-| --- | --- | --- |
-| `bol-granola.webp` | Bioday | `brunch-assiettes.webp` |
-| `toast-saumon.webp` | Toast avocat saumon | `brunch-toasts.webp` |
-| `oeuf-au-plat.webp` | Oeufs au plat avec salade | `brunch-toasts.webp` |
-| `toast-champignons.webp` | Magnolia | `brunch-toasts.webp` |
-| `latte.webp` | Latte | `boissons-chaudes.webp` |
-| `cappuccino.webp` | Cappuccino | `boissons-chaudes.webp` |
-| `chocolat-chaud.webp` | Milk chocolate | `boissons-chaudes.webp` |
+## La possibilité reste ouverte
 
-Les autres produits n'ont pas encore de photo : sur les clichés disponibles,
-rien ne permet de dire avec certitude quel produit de la carte est dans
-l'assiette ou dans le verre. Attribuer une photo au hasard reviendrait à
-montrer au client autre chose que ce qu'il commande.
+Rien n'a été retiré du code. Dès qu'un produit reçoit une photo :
 
-## Ajouter une photo à un produit
+- il affiche une vignette dans la liste ;
+- si **60 % au moins** des produits d'une catégorie en ont une, cette catégorie
+  bascule d'elle-même en grandes cartes illustrées.
 
-Le plus rapide : dashboard → **Photos de la carte**. L'écran ne liste que les
-produits sans photo et propose pour chacun un lien de recherche déjà rempli.
+En dessous de ce seuil, la liste reste typographique avec une vignette sur les
+seuls produits photographiés — jamais de cadre vide à côté d'une photo.
 
-- **Une photo trouvée en ligne** : ouvre-la en grand, clic droit →
-  « Copier l'adresse de l'image », colle l'adresse, **Importer**. Le serveur la
-  télécharge et l'héberge ici ; elle ne dépendra plus du site d'origine.
-  Attention : il faut l'adresse de l'**image** (elle finit par `.jpg`, `.png`
-  ou `.webp`), pas celle de la page qui l'affiche.
-- **Une photo à toi** : bouton **Téléverser**, directement depuis le téléphone
-  ou l'ordinateur. C'est toujours la meilleure option — c'est le produit
-  réellement servi.
-- **Un fichier déposé dans ce dossier** via GitHub (voir `photos/README.md`)
-  apparaît aussi dans la médiathèque du sélecteur de média.
-
-Le format idéal est **carré, 700 × 700 px minimum**, le produit bien au centre :
-la vignette est rognée en carré.
-
-## Mise en page
-
-La carte choisit sa mise en page selon le nombre de produits illustrés dans la
-catégorie affichée :
-
-- **au moins 60 % de produits photographiés** → grandes cartes illustrées ;
-- **en dessous** → lignes de texte, avec une vignette sur les seuls produits
-  qui ont une photo.
-
-Aucun cadre vide n'est donc affiché, et les photos déjà là servent quand même.
+Format idéal : **carré, 700 × 700 px minimum**, produit centré.

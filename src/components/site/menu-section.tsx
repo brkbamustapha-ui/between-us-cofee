@@ -91,6 +91,8 @@ export function MenuSection({
           description="Cafés, boissons glacées, brunch et douceurs. Sélectionnez une catégorie pour parcourir la carte."
         />
 
+        <MenuShowcase />
+
         {hasPlaceholders && (
           <div className="mt-8 flex items-start gap-3 rounded-2xl border border-warn/25 bg-warn/[0.07] p-4 text-sm text-warn sm:p-5">
             <AlertTriangle
@@ -108,7 +110,9 @@ export function MenuSection({
       </div>
 
       {/* Rail de catégories — pleine largeur sur mobile pour un défilement naturel */}
-      <div className="sticky top-16 z-30 mt-8 border-y border-line bg-ink/90 py-3 backdrop-blur-xl sm:top-18">
+      {/* Fond presque opaque : le décor du site défile derrière ce rail, et à
+          90 % le compteur de catégorie tombait à 4,32:1 — sous le seuil. */}
+      <div className="sticky top-16 z-30 mt-8 border-y border-line bg-ink/96 py-3 backdrop-blur-xl sm:top-18">
         <div className="container-x">
           <div
             className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 pb-0.5"
@@ -205,6 +209,58 @@ export function MenuSection({
 
       <MenuItemDialog item={selected} onClose={() => setSelected(null)} />
     </section>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Vitrine                                                                    */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Les clichés de la maison, en tête de carte.
+ *
+ * Ils montrent ce qu'on sert sans prétendre illustrer un produit précis : sur
+ * une photo de trois boissons, rien ne dit laquelle est le « Cappuccino » de la
+ * carte. Les poser ici, à l'entrée du menu, dit la vérité — voilà l'allure de
+ * ce qu'on propose — là où une vignette par produit aurait promis l'assiette
+ * exacte.
+ *
+ * Liste fixe et assumée : c'est une composition, pas du contenu éditorial. Les
+ * photos administrables depuis le dashboard sont la galerie et les bandeaux de
+ * catégorie.
+ */
+const SHOWCASE = [
+  { src: '/photos/brunch-plateau.webp', alt: 'Assiettes de brunch dressées sur une table' },
+  { src: '/photos/boissons-trio.webp', alt: 'Cappuccino, chocolat chaud et latte' },
+  { src: '/photos/granola-latte.webp', alt: 'Bol de granola aux fruits et cappuccino' },
+  { src: '/photos/chocolat-main.webp', alt: 'Chocolat chaud servi en verre' },
+] as const;
+
+function MenuShowcase() {
+  return (
+    <ul
+      className="no-scrollbar -mx-4 mt-9 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 sm:mx-0 sm:grid sm:grid-cols-4 sm:gap-4 sm:overflow-visible sm:px-0"
+      aria-label="Aperçu de la carte"
+    >
+      {SHOWCASE.map((photo, index) => (
+        <li
+          key={photo.src}
+          className="bu-card-in w-40 shrink-0 snap-start sm:w-auto"
+          style={{ '--bu-card-delay': `${index * 70}ms` } as CSSProperties}
+        >
+          <div className="photo-wash relative aspect-[3/4] overflow-hidden rounded-2xl border border-line bg-elevated/40">
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              sizes="(max-width: 640px) 160px, 22vw"
+              loading="lazy"
+              className="object-cover"
+            />
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }
 

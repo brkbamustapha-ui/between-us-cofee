@@ -399,3 +399,160 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   Fond de site : la salle en profondeur
+   ========================================================================== */
+
+/* Quatre clichés du lieu flottent derrière la page comme des panneaux
+   suspendus. Version servie par défaut : rendue par le serveur, sans WebGL ni
+   JavaScript, et fluide sur un téléphone d'entrée de gamme — seules
+   `transform`, `translate` et `opacity` sont animées, donc tout se passe sur le
+   compositeur, jamais dans la mise en page.
+
+   Deux couches par panneau, et c'est volontaire : le cadre porte la parallaxe
+   au défilement, la photo porte la dérive continue. Une seule couche obligerait
+   les deux animations à se disputer la même propriété. */
+
+.bu-room {
+  perspective: 1000px;
+  perspective-origin: 50% 45%;
+  transition: opacity 900ms ease;
+}
+
+/* La scène WebGL a pris le relais : on s'efface au lieu de disparaître d'un
+   coup, sans quoi la bascule clignoterait. */
+.bu-room[data-dimmed] {
+  opacity: 0;
+}
+
+.bu-room-frame {
+  position: absolute;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.bu-room-panel {
+  position: absolute;
+  inset: 0;
+  border-radius: 1.75rem;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  will-change: translate;
+
+  /* Ni `filter` ni `mask-image` ici, et c'est le point important : le
+     navigateur les recalculait sur quatre calques plein écran à chaque image,
+     ce qui coûtait 62 % de la cadence sur une machine modeste. La
+     désaturation, l'assombrissement et le fondu des bords sont maintenant
+     cuits dans les fichiers de `public/photos/room/`. Il ne reste à animer que
+     `translate` et `transform` — du travail de compositeur, pas de peinture. */
+}
+
+/* Placement : quatre panneaux répartis en profondeur. Les tailles sont en
+   `vmax` pour que la composition tienne aussi bien en portrait qu'en paysage —
+   c'est ce qui rend le fond réellement responsive, plutôt qu'un montage calé
+   sur une seule largeur. */
+
+.bu-room-frame[data-depth='0'] {
+  top: -6%;
+  left: -8%;
+  width: 46vmax;
+  height: 62vmax;
+  transform: translateZ(-620px) rotateY(11deg);
+}
+.bu-room-frame[data-depth='1'] {
+  top: 20%;
+  right: -12%;
+  width: 40vmax;
+  height: 56vmax;
+  transform: translateZ(-460px) rotateY(-13deg);
+}
+.bu-room-frame[data-depth='2'] {
+  bottom: -20%;
+  left: 16%;
+  width: 38vmax;
+  height: 52vmax;
+  transform: translateZ(-300px) rotateY(6deg);
+}
+.bu-room-frame[data-depth='3'] {
+  top: 2%;
+  left: 48%;
+  width: 34vmax;
+  height: 48vmax;
+  transform: translateZ(-160px) rotateY(-7deg);
+}
+
+.bu-room-panel[data-depth='0'] { opacity: 0.85; }
+.bu-room-panel[data-depth='1'] { opacity: 0.9; }
+.bu-room-panel[data-depth='2'] { opacity: 0.7; }
+.bu-room-panel[data-depth='3'] { opacity: 0.5; }
+
+/* Dérive lente et continue : c'est elle qui donne la vie sur téléphone, où il
+   n'y a pas de curseur à suivre. Chaque panneau a sa propre durée, les phases
+   ne se resynchronisent donc jamais et le mouvement ne devient pas un
+   balancement mécanique.
+
+   Les valeurs sont écrites en clair, une série de keyframes par panneau plutôt
+   qu'une seule paramétrée par variables CSS : une valeur animée qui passe par
+   `var()` ne peut pas être confiée au compositeur, elle est résolue à chaque
+   image sur le fil principal.
+
+   À vérifier sur un vrai appareil : le navigateur de test rend en SwiftShader,
+   sans processus GPU, donc toute animation y passe par le fil principal quelle
+   que soit sa forme — une animation d'`opacity` seule y produit autant de
+   recalculs que celle-ci. Ce qui a pu être mesuré ici et qui compte : zéro
+   mise en page déclenchée, dans toutes les configurations. Seules des
+   propriétés compositables sont animées, jamais une qui touche la géométrie. */
+
+@keyframes bu-drift-0 { to { translate: 3vmax -2vmax; } }
+@keyframes bu-drift-1 { to { translate: -2.5vmax 2.5vmax; } }
+@keyframes bu-drift-2 { to { translate: 2vmax 2vmax; } }
+@keyframes bu-drift-3 { to { translate: -3vmax -1.5vmax; } }
+
+/* Parallaxe au défilement : chaque plan avance d'autant plus qu'il est proche.
+   C'est ce décalage qui crée le relief, et le remplaçant naturel du curseur sur
+   un écran tactile. La rotation et la profondeur sont répétées dans la valeur
+   d'arrivée : `transform` s'anime en entier, l'omettre remettrait le panneau à
+   plat. */
+
+@keyframes bu-parallax-0 { to { transform: translateZ(-620px) rotateY(11deg) translateY(-12vmax); } }
+@keyframes bu-parallax-1 { to { transform: translateZ(-460px) rotateY(-13deg) translateY(-20vmax); } }
+@keyframes bu-parallax-2 { to { transform: translateZ(-300px) rotateY(6deg) translateY(-30vmax); } }
+@keyframes bu-parallax-3 { to { transform: translateZ(-160px) rotateY(-7deg) translateY(-42vmax); } }
+
+/* Sur téléphone, un plan de moins : c'est là que le budget graphique est le
+   plus serré, et la composition tient très bien à trois panneaux. Les tailles,
+   elles, ne bougent pas — exprimées en `vmax`, elles suivent déjà l'écran, et
+   les réduire encore transformerait les panneaux en vignettes éparpillées. */
+@media (max-width: 640px) {
+  .bu-room-frame[data-depth='3'] {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bu-room-panel {
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  .bu-room-panel[data-depth='0'] { animation-name: bu-drift-0; animation-duration: 23s; }
+  .bu-room-panel[data-depth='1'] { animation-name: bu-drift-1; animation-duration: 31s; }
+  .bu-room-panel[data-depth='2'] { animation-name: bu-drift-2; animation-duration: 27s; }
+  .bu-room-panel[data-depth='3'] { animation-name: bu-drift-3; animation-duration: 37s; }
+
+  @supports (animation-timeline: scroll()) {
+    .bu-room-frame {
+      animation-timeline: scroll(root block);
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+    }
+
+    .bu-room-frame[data-depth='0'] { animation-name: bu-parallax-0; }
+    .bu-room-frame[data-depth='1'] { animation-name: bu-parallax-1; }
+    .bu-room-frame[data-depth='2'] { animation-name: bu-parallax-2; }
+    .bu-room-frame[data-depth='3'] { animation-name: bu-parallax-3; }
+  }
+}

@@ -1,6 +1,7 @@
 import { getSiteContent } from '@/lib/db';
 import { menuJsonLd, restaurantJsonLd } from '@/lib/seo';
 
+import { AmbientRoom } from '@/components/three/ambient-room';
 import { About } from '@/components/site/about';
 import { BestSellers } from '@/components/site/best-sellers';
 import { BottomNav } from '@/components/site/bottom-nav';
@@ -87,6 +88,10 @@ export default async function HomePage() {
           {settings.announcement}
         </div>
       )}
+
+      {/* Le lieu, en fond de toute la page. Décoratif : la lecture du site n'en
+          dépend jamais. */}
+      <AmbientRoom />
 
       <Header
         settings={settings}
